@@ -9,6 +9,7 @@ import {
   addToFavoritesController,
   removeFromFavoritesController,
   getFavoritesController,
+  getNannyByIdController,
 } from "../controllers/nanny";
 import { validateBody } from "../middlewares/validateBody";
 import { nannySchema, updateNannySchema } from "../validation/nanny";
@@ -45,5 +46,7 @@ router.delete(
 );
 
 router.get("/favorites", authenticate, ctrlWrapper(getFavoritesController));
+
+router.get("/:id", authenticate, ctrlWrapper(getNannyByIdController));
 
 export default router;

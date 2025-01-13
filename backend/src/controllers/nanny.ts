@@ -118,7 +118,6 @@ export const getNanniesController = async (
   }
 };
 
-// Додавання до обраних
 export const addToFavoritesController = async (
   req: AuthenticatedRequest,
   res: Response,
@@ -139,7 +138,7 @@ export const addToFavoritesController = async (
 
     const user = await UsersCollection.findByIdAndUpdate(
       userId,
-      { $addToSet: { favorites: nannyId } }, // Додаємо nannyId до "favorites", уникаючи дублікатів
+      { $addToSet: { favorites: nannyId } },
       { new: true }
     ).populate("favorites");
 
@@ -153,7 +152,6 @@ export const addToFavoritesController = async (
   }
 };
 
-// Видалення з обраних
 export const removeFromFavoritesController = async (
   req: AuthenticatedRequest,
   res: Response,
@@ -169,7 +167,7 @@ export const removeFromFavoritesController = async (
 
     const user = await UsersCollection.findByIdAndUpdate(
       userId,
-      { $pull: { favorites: nannyId } }, // Видаляємо nannyId із "favorites"
+      { $pull: { favorites: nannyId } },
       { new: true }
     ).populate("favorites");
 
@@ -183,7 +181,6 @@ export const removeFromFavoritesController = async (
   }
 };
 
-// Отримання списку обраних
 export const getFavoritesController = async (
   req: AuthenticatedRequest,
   res: Response,
@@ -202,6 +199,29 @@ export const getFavoritesController = async (
       status: 200,
       message: "Favorites fetched successfully!",
       data: user?.favorites,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getNannyByIdController = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { id } = req.params;
+
+    const nanny = await NanniesCollection.findById(id);
+    if (!nanny) {
+      throw createHttpError(404, "Nanny not found");
+    }
+
+    res.json({
+      status: 200,
+      message: "Nanny fetched successfully!",
+      data: nanny,
     });
   } catch (error) {
     next(error);
