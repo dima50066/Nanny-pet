@@ -1,9 +1,9 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema, Types } from "mongoose";
 
 export interface User extends Document {
   email: string;
   password: string;
-  role: "client" | "nanny";
+  favorites: Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -12,7 +12,7 @@ const UserSchema: Schema<User> = new Schema(
   {
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: { type: String, enum: ["client", "nanny"], default: "client" },
+    favorites: [{ type: Schema.Types.ObjectId, ref: "nannies" }],
   },
   {
     timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" },

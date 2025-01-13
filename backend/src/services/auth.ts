@@ -18,7 +18,6 @@ import fs from "node:fs/promises";
 interface UserPayload {
   email: string;
   password: string;
-  role?: "client" | "nanny";
 }
 
 export const registerUser = async (payload: UserPayload) => {
@@ -59,7 +58,6 @@ export const loginUser = async (payload: UserPayload) => {
     user: {
       _id: user._id,
       email: user.email,
-      role: user.role,
     },
   };
 };
