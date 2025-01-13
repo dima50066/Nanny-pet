@@ -1,0 +1,56 @@
+# Загальні файли
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Вихідні файли компілятора
+/dist/
+/build/
+/out-tsc/
+
+# Кеш npm
+node_modules/
+
+# Конфігурація VSCode
+.vscode/
+*.code-workspace
+
+# Конфігурація JetBrains
+/.idea/
+*.iml
+*.ipr
+*.iws
+
+# Конфігурація macOS
+.DS_Store
+
+# Конфігурація Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Файли замінників
+.env*
+*.env
+!.env.example
+
+# Файли пакетів
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Тестові файли
+/test-results/
+coverage/
+*.test.js
+*.spec.js
+
+# Інші файли
+*.bak
+*.swp
+*.swo
+*.tmp
+
+file_list.txt
