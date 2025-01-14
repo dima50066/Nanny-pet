@@ -81,3 +81,17 @@ export interface QueryParams {
   priceRange?: string;
   rating?: number;
 }
+
+export interface Appointment {
+  _id: string;
+  nannyId: string;
+  userId: string;
+  date: string;
+  message: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AppointmentResponse {
+  data: Appointment;
+}
