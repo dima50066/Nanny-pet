@@ -1,0 +1,106 @@
+:root {
+  --font-family: "Helvetica Neue", sans-serif;
+  --main: #103931;
+  --text: #11101c;
+  --white: #fff;
+  --nanny: #8a8a89;
+  --price: #38cd3e;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--white);
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  border: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+div,
+ul,
+ol {
+  box-sizing: border-box;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: currentColor;
+  text-decoration: none;
+}
+
+section {
+  min-width: 320px;
+  max-width: 375px;
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 768px) {
+  section {
+    max-width: 768px;
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  section {
+    max-width: 1440px;
+  }
+}
+
+/* toaster */
+
+.Toastify__toast {
+  border-radius: 10px;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  color: #333333;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.Toastify__toast--success {
+  background: #ffffff;
+  border-left: 5px solid #4caf50;
+}
+
+.Toastify__toast--error {
+  background: #ffffff;
+  border-left: 5px solid #ff5252;
+}
+
+.Toastify__toast--info {
+  background: #ffffff;
+  border-left: 5px solid #2196f3;
+}
+
+.Toastify__toast--warning {
+  background: #ffffff;
+  border-left: 5px solid #ff9800;
+}
+
+.Toastify__progress-bar {
+  background: #ff5252;
+  border-radius: 10px;
+}
