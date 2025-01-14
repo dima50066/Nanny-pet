@@ -1,11 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectIsLoggedIn } from "../../redux/auth/selectors";
-
-interface RestrictedRouteProps {
-  component: JSX.Element;
-  redirectTo?: string;
-}
+import { RestrictedRouteProps } from "../../types";
 
 const RestrictedRoute = ({
   component,
