@@ -34,7 +34,7 @@ export const setupServer = () => {
     origin:
       process.env.NODE_ENV === "production"
         ? "https://extraordinary-stillness-production.up.railway.app"
-        : "http://localhost:3000",
+        : "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Authorization", "Content-Type"],
     credentials: true,

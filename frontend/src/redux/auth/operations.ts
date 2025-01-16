@@ -18,7 +18,7 @@ export const registerUser = createAsyncThunk(
   ) => {
     try {
       const response = await axiosInstance.post<{ user: User }>(
-        "/register",
+        "/auth/register",
         userData
       );
       return response.data;
@@ -39,7 +39,7 @@ export const loginUser = createAsyncThunk(
   ) => {
     try {
       const response = await axiosInstance.post<LoginResponse>(
-        "/login",
+        "/auth/login",
         userData
       );
       const { accessToken, user } = response.data.data;
@@ -57,7 +57,7 @@ export const logoutUser = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
     try {
-      await axiosInstance.post("/logout");
+      await axiosInstance.post("/auth/logout");
       clearAuthHeader();
     } catch (error) {
       const err = error as AxiosErrorResponse;
@@ -70,7 +70,7 @@ export const refreshSession = createAsyncThunk(
   "auth/refreshSession",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post<LoginResponse>("/refresh");
+      const response = await axiosInstance.post<LoginResponse>("/auth/refresh");
       const { accessToken } = response.data.data;
 
       setAuthHeader(accessToken);
@@ -89,7 +89,7 @@ export const requestPasswordReset = createAsyncThunk(
   async (email: string, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post<ResetResponse>(
-        "/send-reset-email",
+        "/auth/send-reset-email",
         { email }
       );
       return response.data.message;
@@ -110,7 +110,7 @@ export const resetPassword = createAsyncThunk(
   ) => {
     try {
       const response = await axiosInstance.post<ResetResponse>(
-        "/reset-pwd",
+        "/auth/reset-pwd",
         payload
       );
       return response.data.message;

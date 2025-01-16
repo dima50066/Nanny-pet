@@ -86,6 +86,10 @@
                 stroke-linejoin="round" />
         </symbol>
 
+        <symbol id="close" viewBox="0 0 32 32" fill="none">
+            <path d="M24 8L8 24" stroke="#11101C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M8 8L24 24" stroke="#11101C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+        </symbol>
 
 
 

@@ -1,4 +1,4 @@
-import { useEffect, ReactNode } from "react";
+import React, { useEffect, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import Icon from "../icon/Icon";
 
@@ -11,14 +11,14 @@ type ModalProps = {
   btnClassName?: string;
 };
 
-const Modal = ({
+const Modal: React.FC<ModalProps> = ({
   children,
   isOpen,
   onClose,
   className = "",
   classNameWrapper = "",
   btnClassName = "",
-}: ModalProps) => {
+}) => {
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -50,22 +50,22 @@ const Modal = ({
 
   return createPortal(
     <div
-      className="fixed inset-0 w-full h-full bg-black bg-opacity-50 z-50 flex items-center justify-center overflow-hidden"
+      className="fixed inset-0 w-full h-full bg-[rgba(0,0,0,0.5)] z-50 overflow-hidden flex items-center justify-center"
       onClick={handleBackdropClick}
     >
       <div
-        className={`relative bg-white rounded-lg shadow-xl max-h-screen min-w-[320px] max-w-[344px] overflow-y-auto overflow-x-hidden transform translate-y-[-50%] translate-x-[-50%] top-1/2 left-1/2 ${classNameWrapper}`}
+        className={`relative bg-white overflow-y-auto overflow-x-hidden ${classNameWrapper}`}
       >
-        <div className={`relative p-4 ${className}`}>
+        <div className={`relative ${className}`}>
           <button
-            className={`absolute top-4 right-4 w-6 h-6 bg-transparent border-none cursor-pointer ${btnClassName}`}
+            className={`absolute top-[20px] right-[20px] bg-transparent border-none cursor-pointer w-[24px] h-[24px] focus:outline-none hover:stroke-[#FF4D4D] ${btnClassName}`}
             onClick={onClose}
           >
             <Icon
-              id="x-close"
-              className="stroke-current text-main hover:text-red-500"
-              width="24"
-              height="24"
+              id="close"
+              className="stroke-[#103931] transition-all"
+              width="32"
+              height="32"
             />
           </button>
           {children}

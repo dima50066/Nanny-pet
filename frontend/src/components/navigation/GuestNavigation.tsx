@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Logo from "../../shared/logo/Logo";
 import Modal from "../../shared/modal/Modal";
+import LogInModal from "../modals/Login";
 
 const GuestNavigation = () => {
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
@@ -47,20 +48,16 @@ font-sans font-medium text-[16px] leading-[1.25] tracking-[-0.01em] text-[#fbfbf
       <Modal
         isOpen={isLoginModalOpen}
         onClose={() => setLoginModalOpen(false)}
-        className="p-6"
-        classNameWrapper="max-w-lg"
+        classNameWrapper="rounded-[30px]"
       >
-        <div>
-          <p>This space is reserved for the Log In component.</p>
-        </div>
+        <LogInModal />
       </Modal>
 
       {/* Модальне вікно для Registration */}
       <Modal
         isOpen={isRegisterModalOpen}
         onClose={() => setRegisterModalOpen(false)}
-        className="p-6"
-        classNameWrapper="max-w-lg"
+        classNameWrapper="rounded-[30px]"
       >
         <div>
           <p>This space is reserved for the Registration component.</p>

@@ -52,7 +52,7 @@ a {
 }
 
 section {
-  padding: 32px;
+  padding: 0 32px;
 }
 
 .container {
@@ -99,5 +99,21 @@ section {
 @layer components {
   .text-custom {
     @apply font-sans font-normal text-[16px] leading-[1.25] tracking-[-0.01em] text-[#fbfbfb];
+  }
+
+  .text-title {
+    @apply font-sans font-medium text-[40px] leading-[1.2] tracking-[-0.02em] text-[#11101c];
+  }
+
+  .text-subtitle {
+    @apply font-sans font-normal text-[16px] leading-[1.25] text-[rgba(17,16,28,0.5)];
+  }
+
+  .input {
+    @apply border border-[rgba(17,16,28,0.1)] rounded-[12px] px-[18px] py-[16px] w-[438px] h-[52px];
+  }
+
+  .input-text {
+    @apply font-sans font-normal text-[16px] leading-[1.25] text-[#11101c];
   }
 }
