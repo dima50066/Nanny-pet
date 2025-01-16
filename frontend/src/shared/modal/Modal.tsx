@@ -58,7 +58,7 @@ const Modal: React.FC<ModalProps> = ({
       >
         <div className={`relative ${className}`}>
           <button
-            className={`absolute top-[20px] right-[20px] bg-transparent border-none cursor-pointer w-[24px] h-[24px] focus:outline-none hover:stroke-[#FF4D4D] ${btnClassName}`}
+            className={`absolute top-[20px] right-[20px] bg-transparent border-none cursor-pointer ${btnClassName}`}
             onClick={onClose}
           >
             <Icon
