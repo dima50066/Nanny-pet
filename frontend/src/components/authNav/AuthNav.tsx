@@ -1,12 +1,16 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../redux/store";
+import { logoutUser } from "../../redux/auth/operations";
 import Modal from "../../shared/modal/Modal";
 import LoginModal from "../modals/Login";
 import RegisterModal from "../modals/Register";
 import Icon from "../../shared/icon/Icon";
 import { selectIsLoggedIn, selectUser } from "../../redux/auth/selectors";
+import { AppDispatch } from "../../redux/store";
 
 const AuthNav: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const isAuthenticated = useAppSelector(selectIsLoggedIn);
   const user = useAppSelector(selectUser);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
@@ -18,8 +22,14 @@ const AuthNav: React.FC = () => {
   const closeLoginModal = () => setIsLoginModalOpen(false);
   const closeRegisterModal = () => setIsRegisterModalOpen(false);
 
-  const getShortUserName = (name: string): string =>
-    name.length > 10 ? `${name.slice(0, 10)}..` : name;
+  const handleLogout = () => {
+    dispatch(logoutUser());
+  };
+
+  const getShortUserName = (name?: string): string => {
+    if (!name) return "User";
+    return name.length > 10 ? `${name.slice(0, 10)}..` : name;
+  };
 
   return (
     <div className="flex items-center gap-[8px]">
@@ -38,14 +48,11 @@ const AuthNav: React.FC = () => {
             <span className="bg-white p-1.5 rounded-lg flex items-center justify-center">
               <Icon id="user" className="w-9 h-9" />
             </span>
-            <p className="text-white text-lg  font-medium">
-              {user ? getShortUserName(user.name) : "User"}
+            <p className="text-white text-lg font-medium">
+              {getShortUserName(user?.name)}
             </p>
           </div>
-          <button
-            className="w-32 bg-main authNavBtn"
-            onClick={() => alert("Logout functionality not implemented yet")}
-          >
+          <button className="w-32 bg-main authNavBtn" onClick={handleLogout}>
             Log Out
           </button>
         </div>

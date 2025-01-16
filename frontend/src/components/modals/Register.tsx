@@ -21,7 +21,7 @@ const RegisterModal = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(registerUser({ email, password }));
+    dispatch(registerUser({ name, email, password }));
   };
 
   return (
