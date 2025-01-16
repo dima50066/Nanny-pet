@@ -21,13 +21,12 @@ const Nannies: React.FC = () => {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    // Завантаження нянь при зміні фільтрів або сторінки
     dispatch(fetchNannies({ sort: filters, page }));
   }, [dispatch, filters, page]);
 
   const handleFilterChange = (newFilter: string) => {
     setFilters(newFilter);
-    setPage(1); // Скидаємо сторінку при зміні фільтрів
+    setPage(1);
   };
 
   const handleLoadMore = () => {
@@ -38,19 +37,14 @@ const Nannies: React.FC = () => {
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Nannies</h1>
 
-      {/* Filters Component */}
       <Filters selectedFilter={filters} onFilterChange={handleFilterChange} />
 
-      {/* Error Message */}
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
-      {/* Nannies List */}
       <NanniesList nannies={nannies} />
 
-      {/* Loading Indicator */}
       {isLoading && <p className="text-center text-gray-500">Loading...</p>}
 
-      {/* Load More Button */}
       {!isLoading && !error && (
         <div className="flex justify-center mt-6">
           <LoadMore onClick={handleLoadMore} />
