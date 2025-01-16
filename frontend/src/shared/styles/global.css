@@ -14,7 +14,6 @@ body {
 button {
   cursor: pointer;
   font-family: inherit;
-  border: none;
 }
 
 h1,
@@ -95,8 +94,10 @@ section {
   background: #ff5252;
   border-radius: 10px;
 }
+
 /* tailwind */
 @layer components {
+  /* MODALS */
   .text-custom {
     @apply font-sans font-normal text-[16px] leading-[1.25] tracking-[-0.01em] text-[#fbfbfb];
   }
@@ -115,5 +116,34 @@ section {
 
   .input-text {
     @apply font-sans font-normal text-[16px] leading-[1.25] text-[#11101c];
+  }
+  /* WELCOME */
+  .welcome-title {
+    @apply font-sans font-medium text-[70px] leading-[1] tracking-[-0.03em] text-[#fbfbfb];
+  }
+
+  .welcome-sub {
+    @apply font-sans font-normal text-[28px] leading-[1.07] tracking-[-0.02em] text-[#fbfbfb];
+  }
+
+  .welcome-btn {
+    @apply border border-[rgba(251,251,251,0.4)] rounded-[30px] pl-[50px] py-[18px] w-[230px] h-[60px];
+  }
+
+  .welcome-btn-text {
+    @apply font-sans font-medium text-[20px] leading-[1.2] tracking-[-0.01em] text-[#fbfbfb];
+  }
+
+  .welcome-right-text {
+    @apply font-bold text-[24px] text-[#11101c];
+  }
+
+  /* HEADER */
+  .header-text {
+    @apply font-sans font-normal text-[16px] leading-[1.25] tracking-[-0.01em] text-[#fbfbfb];
+  }
+
+  .authNavBtn {
+    @apply w-32 border border-white/40 rounded-3xl px-6 py-3 text-white leading-[1.25] hover:bg-white hover:text-main transition;
   }
 }

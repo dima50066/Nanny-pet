@@ -1,9 +1,12 @@
 import { BrowserRouter as Router } from "react-router-dom";
-import Navigation from "./components/navigation/Navigation";
+import HomePage from "./pages/home/HomePage";
 const App = () => {
   return (
     <Router>
-      <Navigation />
+      <main>
+        {" "}
+        <HomePage />
+      </main>
     </Router>
   );
 };
