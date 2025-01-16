@@ -9,7 +9,6 @@
 
 body {
   font-family: var(--font-family);
-  background-color: var(--white);
 }
 
 button {
@@ -53,21 +52,13 @@ a {
 }
 
 section {
-  min-width: 320px;
-  max-width: 375px;
-  margin: 0 auto;
+  padding: 32px;
 }
 
-@media screen and (min-width: 768px) {
-  section {
-    max-width: 768px;
-  }
-}
-
-@media screen and (min-width: 1440px) {
-  section {
-    max-width: 1440px;
-  }
+.container {
+  max-width: 1376px;
+  padding-left: 96px;
+  padding-right: 96px;
 }
 
 /* toaster */
@@ -103,4 +94,10 @@ section {
 .Toastify__progress-bar {
   background: #ff5252;
   border-radius: 10px;
+}
+/* tailwind */
+@layer components {
+  .text-custom {
+    @apply font-sans font-normal text-[16px] leading-[1.25] tracking-[-0.01em] text-[#fbfbfb];
+  }
 }

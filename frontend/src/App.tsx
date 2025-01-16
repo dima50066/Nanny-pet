@@ -1,8 +1,10 @@
+import { BrowserRouter as Router } from "react-router-dom";
+import Navigation from "./components/navigation/Navigation";
 const App = () => {
   return (
-    <div>
-      <h1>Welcome to Nanny App</h1>
-    </div>
+    <Router>
+      <Navigation />
+    </Router>
   );
 };
 
