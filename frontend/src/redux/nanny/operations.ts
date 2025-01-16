@@ -14,7 +14,7 @@ export const createNanny = createAsyncThunk(
   async (nannyData: Partial<Nanny>, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post<NannyResponse>(
-        "/nannies",
+        "/nanny",
         nannyData
       );
       return response.data.data;
@@ -31,7 +31,7 @@ export const getMyNannyProfile = createAsyncThunk(
   "nanny/getMyProfile",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get<NannyResponse>("/nannies/me");
+      const response = await axiosInstance.get<NannyResponse>("/nanny/me");
       return response.data.data;
     } catch (error) {
       const err = error as AxiosErrorResponse;
@@ -47,7 +47,7 @@ export const updateNannyProfile = createAsyncThunk(
   async (updates: Partial<Nanny>, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.patch<NannyResponse>(
-        "/nannies",
+        "/nanny",
         updates
       );
       return response.data.data;
@@ -64,7 +64,7 @@ export const deleteNannyProfile = createAsyncThunk(
   "nanny/delete",
   async (_, { rejectWithValue }) => {
     try {
-      await axiosInstance.delete("/nannies");
+      await axiosInstance.delete("/nanny");
       return "Nanny profile deleted successfully";
     } catch (error) {
       const err = error as AxiosErrorResponse;
@@ -79,12 +79,9 @@ export const fetchNannies = createAsyncThunk(
   "nanny/fetchAll",
   async (queryParams: QueryParams, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get<NanniesListResponse>(
-        "/nannies",
-        {
-          params: queryParams,
-        }
-      );
+      const response = await axiosInstance.get<NanniesListResponse>("/nanny", {
+        params: queryParams,
+      });
       return response.data.data;
     } catch (error) {
       const err = error as AxiosErrorResponse;
@@ -100,7 +97,7 @@ export const addToFavorites = createAsyncThunk(
   async (nannyId: string, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post<FavoritesResponse>(
-        "/nannies/favorites",
+        "/nanny/favorites",
         {
           nannyId,
         }
@@ -140,7 +137,7 @@ export const fetchFavorites = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get<FavoritesResponse>(
-        "/nannies/favorites"
+        "/nanny/favorites"
       );
       return response.data.data;
     } catch (error) {
@@ -156,7 +153,7 @@ export const fetchNannyById = createAsyncThunk(
   "nanny/fetchById",
   async (id: string, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get<NannyResponse>(`/nannies/${id}`);
+      const response = await axiosInstance.get<NannyResponse>(`/nanny/${id}`);
       return response.data.data;
     } catch (error) {
       const err = error as AxiosErrorResponse;

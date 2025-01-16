@@ -75,7 +75,7 @@ export interface FavoritesResponse {
 }
 
 export interface QueryParams {
-  sortBy?: string;
+  sort?: string;
   order?: "asc" | "desc";
   page?: number;
   limit?: number;
