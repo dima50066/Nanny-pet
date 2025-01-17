@@ -184,4 +184,11 @@ section {
   .nannies-loadMore {
     @apply rounded-[30px] py-[14px] px-[40px] w-[159px] h-[48px] font-medium text-[16px] leading-[125%] tracking-[-0.01em] text-[#fbfbfb];
   }
+
+  .nannies-reviewer-name {
+    @apply font-medium text-[16px] leading-[125%] text-[#11101c];
+  }
+  .nannies-reviewer-rating {
+    @apply font-medium text-[14px] leading-[129%] text-[#11101c];
+  }
 }

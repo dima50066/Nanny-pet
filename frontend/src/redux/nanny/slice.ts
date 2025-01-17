@@ -1,23 +1,37 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchFilteredNannies } from "./operations";
 import { Nanny } from "../../types";
+import {
+  fetchFilteredNannies,
+  addToFavorites,
+  removeFromFavorites,
+  fetchFavorites,
+  updateNannyProfile,
+  fetchMyNannyProfile,
+  fetchNannyById,
+} from "./operations";
 
 interface NannyState {
   items: Nanny[];
   loading: boolean;
   error: string | null;
-  hasFetched: boolean;
   page: number;
+  hasFetched: boolean;
   hasMore: boolean;
+  currentNanny: Nanny | null;
+  favorites: Nanny[];
+  myNannyProfile: Nanny | null;
 }
 
 const initialState: NannyState = {
   items: [],
   loading: false,
   error: null,
-  hasFetched: false,
   page: 0,
+  hasFetched: false,
   hasMore: true,
+  currentNanny: null,
+  favorites: [],
+  myNannyProfile: null,
 };
 
 const nanniesSlice = createSlice({
@@ -36,10 +50,13 @@ const nanniesSlice = createSlice({
     resetPage(state) {
       state.page = 1;
       state.hasMore = true;
-      state.items = []; // Очищаємо список при скиданні сторінки
+      state.items = [];
     },
     resetItems(state) {
-      state.items = []; // Очищаємо список при зміні фільтрів
+      state.items = [];
+    },
+    resetFavorites(state) {
+      state.favorites = [];
     },
   },
   extraReducers: (builder) => {
@@ -48,14 +65,12 @@ const nanniesSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchFilteredNannies.fulfilled, (state, action) => {
-        // Якщо це нові фільтри, заміщаємо старі результати
         if (state.page === 1) {
           state.items = action.payload.nannies;
         } else {
           state.items.push(...action.payload.nannies);
         }
 
-        // Оновлюємо стан hasMore
         if (action.payload.nannies.length < 3) {
           state.hasMore = false;
         }
@@ -67,10 +82,37 @@ const nanniesSlice = createSlice({
         state.loading = false;
         state.error = action.payload || "Failed to fetch nannies";
         state.hasFetched = true;
+      })
+      .addCase(fetchFavorites.fulfilled, (state, action) => {
+        state.favorites = action.payload;
+      })
+      .addCase(addToFavorites.fulfilled, (state, action) => {
+        state.favorites = action.payload;
+      })
+      .addCase(removeFromFavorites.fulfilled, (state, action) => {
+        state.favorites = action.payload;
+      })
+      .addCase(fetchMyNannyProfile.fulfilled, (state, action) => {
+        state.myNannyProfile = action.payload;
+      })
+      .addCase(updateNannyProfile.fulfilled, (state, action) => {
+        state.myNannyProfile = action.payload;
+      })
+      .addCase(fetchNannyById.fulfilled, (state, action) => {
+        state.currentNanny = action.payload;
+      })
+      .addCase(fetchNannyById.rejected, (state, action) => {
+        state.error = action.payload || "Failed to fetch nanny by ID";
       });
   },
 });
 
-export const { resetHasFetched, setPage, resetPage, setHasMore, resetItems } =
-  nanniesSlice.actions;
+export const {
+  resetHasFetched,
+  resetFavorites,
+  resetItems,
+  setPage,
+  setHasMore,
+  resetPage,
+} = nanniesSlice.actions;
 export default nanniesSlice.reducer;

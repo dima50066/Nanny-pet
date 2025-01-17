@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Nanny as NannyType } from "../../../types";
 import Icon from "../../../shared/icon/Icon";
 
@@ -7,6 +7,11 @@ interface NannyProps {
 }
 
 const Nanny: React.FC<NannyProps> = ({ nanny }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const handleReadMoreClick = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   return (
     <div className="flex p-6 bg-[#fbfbfb] border rounded-[24px]">
       <div className="flex-shrink-0 mr-6">
@@ -79,8 +84,42 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
           </p>
         </div>
         <div>
-          <button className="nannies-read-more">Read more</button>
+          <button className="nannies-read-more" onClick={handleReadMoreClick}>
+            {isExpanded ? "Show less" : "Read more"}
+          </button>
         </div>
+
+        {isExpanded && (
+          <div className="mt-4">
+            <div className="space-y-4">
+              {nanny.reviews.map((review, index) => (
+                <div key={index} className="p-4 rounded-md">
+                  <div className="flex mb-[16px]">
+                    <div className="w-[44px] h-[44px] bg-gray-200 text-black text-center rounded-full flex items-center justify-center">
+                      {review.reviewer.charAt(0)}
+                    </div>
+
+                    <div className="ml-2 flex flex-col">
+                      <p className="nannies-reviewer-name pb-[4px]">
+                        {review.reviewer}
+                      </p>
+                      <div className="flex flex-row">
+                        <Icon
+                          id="star"
+                          className="w-4 h-4 text-yellow-400 mr-1"
+                        />
+                        <p className="nannies-reviewer-rating">
+                          {review.rating}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-subtitle">{review.comment}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
