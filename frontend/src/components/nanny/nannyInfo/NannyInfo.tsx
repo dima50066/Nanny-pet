@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { Nanny as NannyType } from "../../../types";
 import Icon from "../../../shared/icon/Icon";
+import { useAppDispatch, useAppSelector } from "../../../redux/store";
+import {
+  addToFavorites,
+  removeFromFavorites,
+} from "../../../redux/nanny/operations";
+import { selectFavorites } from "../../../redux/nanny/selectors";
 
 interface NannyProps {
   nanny: NannyType;
@@ -8,6 +14,22 @@ interface NannyProps {
 
 const Nanny: React.FC<NannyProps> = ({ nanny }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const dispatch = useAppDispatch();
+  const favorites = useAppSelector(selectFavorites);
+
+  // Перевірка, чи є няня в обраних
+  const isFavorite = favorites.some((favNanny) => favNanny._id === nanny._id);
+
+  console.log(isFavorite);
+
+  const handleFavoriteClick = () => {
+    if (isFavorite) {
+      dispatch(removeFromFavorites({ nannyId: nanny._id }));
+    } else {
+      dispatch(addToFavorites({ nannyId: nanny._id }));
+    }
+  };
+
   const handleReadMoreClick = () => {
     setIsExpanded(!isExpanded);
   };
@@ -27,18 +49,21 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
       <div className="flex-1">
         <div className="flex direction-row justify-between mb-[8px]">
           <p className="text-subtitle">Nanny</p>
-          <div className="flex lex direction-row items-center">
+          <div className="flex direction-row items-center">
             <Icon id="location" className="w-4 h-4 text-gray-500 mr-2" />
             <p className="nannies-header-text">{nanny.location}</p>
             <Icon id="star" className="w-4 h-4 text-yellow-400 mr-1" />
             <p className="nannies-header-text">Rating: {nanny.rating}</p>
             <p className="nannies-header-text flex gap-1 pr-[48px]">
               Price / 1 hour:{" "}
-              <p className="text-[#38cd3e]">{nanny.price_per_hour}$</p>
+              <span className="text-[#38cd3e]">{nanny.price_per_hour}$</span>
             </p>
             <Icon
-              id="heart"
-              className="w-6 h-6 text-gray-500 cursor-pointer hover:text-red-500"
+              id={isFavorite ? "heart-filled" : "heart"}
+              className={`w-6 h-6 cursor-pointer ${
+                isFavorite ? "text-red-500" : "text-gray-500"
+              } hover:text-red-500`}
+              onClick={handleFavoriteClick}
             />
           </div>
         </div>
@@ -46,35 +71,7 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
           <h2 className="nannies-name">{nanny.name}</h2>
         </div>
         <div className="flex gap-2 flex-wrap pb-[24px]">
-          <div className="nannies-panels">
-            <p className="nannies-panels-title">Age:</p>
-            <p className="nannies-panels-text underline">
-              {new Date().getFullYear() -
-                new Date(nanny.birthday).getFullYear() -
-                (new Date().getMonth() < new Date(nanny.birthday).getMonth() ||
-                (new Date().getMonth() ===
-                  new Date(nanny.birthday).getMonth() &&
-                  new Date().getDate() < new Date(nanny.birthday).getDate())
-                  ? 1
-                  : 0)}
-            </p>
-          </div>
-          <div className="nannies-panels">
-            <p className="nannies-panels-title">Experience:</p>
-            <p className="nannies-panels-text">{nanny.experience}</p>
-          </div>
-          <div className="nannies-panels">
-            <p className="nannies-panels-title">Kids age:</p>
-            <p className="nannies-panels-text">{nanny.kids_age} years old</p>
-          </div>
-          <div className="nannies-panels">
-            <p className="nannies-panels-title">Characters:</p>
-            <p className="nannies-panels-text">{nanny.characters.join(", ")}</p>
-          </div>
-          <div className="nannies-panels ">
-            <p className="nannies-panels-title">Education:</p>
-            <p className="nannies-panels-text">{nanny.education}</p>
-          </div>
+          {/* Інша інформація про няню */}
         </div>
         <div>
           <p className="text-sm text-gray-600 mb-4">
