@@ -7,6 +7,8 @@ interface NannyState {
   loading: boolean;
   error: string | null;
   hasFetched: boolean;
+  page: number;
+  hasMore: boolean;
 }
 
 const initialState: NannyState = {
@@ -14,6 +16,8 @@ const initialState: NannyState = {
   loading: false,
   error: null,
   hasFetched: false,
+  page: 0,
+  hasMore: true,
 };
 
 const nanniesSlice = createSlice({
@@ -21,7 +25,21 @@ const nanniesSlice = createSlice({
   initialState,
   reducers: {
     resetHasFetched(state) {
-      state.hasFetched = false; // Скидаємо флажок
+      state.hasFetched = false;
+    },
+    setPage(state, action) {
+      state.page = action.payload;
+    },
+    setHasMore(state, action) {
+      state.hasMore = action.payload;
+    },
+    resetPage(state) {
+      state.page = 1;
+      state.hasMore = true;
+      state.items = []; // Очищаємо список при скиданні сторінки
+    },
+    resetItems(state) {
+      state.items = []; // Очищаємо список при зміні фільтрів
     },
   },
   extraReducers: (builder) => {
@@ -30,7 +48,18 @@ const nanniesSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchFilteredNannies.fulfilled, (state, action) => {
-        state.items = action.payload.nannies;
+        // Якщо це нові фільтри, заміщаємо старі результати
+        if (state.page === 1) {
+          state.items = action.payload.nannies;
+        } else {
+          state.items.push(...action.payload.nannies);
+        }
+
+        // Оновлюємо стан hasMore
+        if (action.payload.nannies.length < 3) {
+          state.hasMore = false;
+        }
+
         state.loading = false;
         state.hasFetched = true;
       })
@@ -42,4 +71,6 @@ const nanniesSlice = createSlice({
   },
 });
 
+export const { resetHasFetched, setPage, resetPage, setHasMore, resetItems } =
+  nanniesSlice.actions;
 export default nanniesSlice.reducer;

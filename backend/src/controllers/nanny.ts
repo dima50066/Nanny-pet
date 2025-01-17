@@ -109,7 +109,7 @@ export const getNanniesController = async (
       message: "Nannies fetched successfully!",
       data: {
         nannies,
-        totalPages: Math.ceil(totalCount / Number(req.query.limit || 10)),
+        totalPages: Math.ceil(totalCount / 3),
         currentPage: Number(req.query.page || 1),
       },
     });
