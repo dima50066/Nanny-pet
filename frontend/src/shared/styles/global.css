@@ -180,4 +180,8 @@ section {
   .nannies-read-more {
     @apply font-medium text-base leading-[150%] underline  text-[#11101c];
   }
+
+  .nannies-loadMore {
+    @apply rounded-[30px] py-[14px] px-[40px] w-[159px] h-[48px] font-medium text-[16px] leading-[125%] tracking-[-0.01em] text-[#fbfbfb];
+  }
 }

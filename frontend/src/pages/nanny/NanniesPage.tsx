@@ -46,6 +46,9 @@ const Nannies: React.FC = () => {
         {!loading && nannies.length === 0 && <p>No nannies found.</p>}
 
         <NanniesList nannies={nannies} />
+        <div className="mt-[64px] items-center flex justify-center">
+          <button className="nannies-loadMore bg-main">Load more</button>
+        </div>
       </div>
     </div>
   );

@@ -46,7 +46,7 @@ export const getFilteredNannies = async (query: any) => {
     sortBy = "name",
     order = "asc",
     page = 1,
-    limit = 10,
+    limit = 3,
     priceRange,
     rating,
   } = query;
