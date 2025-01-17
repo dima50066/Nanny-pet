@@ -3,12 +3,14 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import authReducer from "./auth/slice";
 import nannyReducer from "./nanny/slice";
 import appointmentReducer from "./appointment/slice";
+import filtersReducer from "./filter/slice";
 
 export const store = configureStore({
   reducer: {
-    nanny: nannyReducer,
+    nannies: nannyReducer,
     auth: authReducer,
     appointment: appointmentReducer,
+    filters: filtersReducer,
   },
 });
 

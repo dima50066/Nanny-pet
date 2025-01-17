@@ -1,8 +1,6 @@
-import { RootState } from "../store";
+import { RootState } from "../../redux/store";
 
-export const selectNannies = (state: RootState) => state.nanny.nannies;
-export const selectMyNannyProfile = (state: RootState) => state.nanny.myProfile;
-export const selectFavorites = (state: RootState) => state.nanny.favorites;
-export const selectNannyDetails = (state: RootState) => state.nanny.details;
-export const selectNannyLoading = (state: RootState) => state.nanny.isLoading;
-export const selectNannyError = (state: RootState) => state.nanny.error;
+export const selectNannies = (state: RootState) => state.nannies.items;
+export const selectLoading = (state: RootState) => state.nannies.loading;
+
+export const selectHasFetched = (state: RootState) => state.nannies.hasFetched;

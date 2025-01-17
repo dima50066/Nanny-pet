@@ -18,11 +18,30 @@ export const clearAuthHeader = () => {
   delete axiosInstance.defaults.headers.common["Authorization"];
 };
 
-export const axiosWithToken = (token?: string) => {
-  if (token) {
-    axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        const response = await axios.post(`${API_URL}/auth/refresh`, null, {
+          withCredentials: true,
+        });
+        const { accessToken } = response.data.data;
+
+        setAuthHeader(accessToken);
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        return axiosInstance(originalRequest);
+      } catch (refreshError) {
+        return Promise.reject(refreshError);
+      }
+    }
+
+    return Promise.reject(error);
   }
-  return axiosInstance;
-};
+);
 
 export default axiosInstance;

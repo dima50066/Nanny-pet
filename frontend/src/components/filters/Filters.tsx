@@ -1,3 +1,5 @@
+import React from "react";
+
 interface FiltersProps {
   selectedFilter: string;
   onFilterChange: (filter: string) => void;
@@ -7,11 +9,18 @@ const Filters: React.FC<FiltersProps> = ({
   selectedFilter,
   onFilterChange,
 }) => {
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    if (value !== selectedFilter) {
+      onFilterChange(value);
+    }
+  };
+
   return (
     <div className="relative inline-block w-48 mb-6">
       <select
         value={selectedFilter}
-        onChange={(e) => onFilterChange(e.target.value)}
+        onChange={handleChange}
         className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-main focus:border-main"
       >
         <option value="A to Z">A to Z</option>

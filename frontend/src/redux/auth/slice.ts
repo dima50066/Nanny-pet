@@ -16,6 +16,7 @@ interface AuthState {
   error: string | null;
   successMessage: string | null;
   isAuthenticated: boolean;
+  isTokenRefreshing: boolean;
 }
 
 const initialState: AuthState = {
@@ -25,6 +26,7 @@ const initialState: AuthState = {
   error: null,
   successMessage: null,
   isAuthenticated: false,
+  isTokenRefreshing: false,
 };
 
 const authSlice = createSlice({
@@ -42,6 +44,12 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
+    },
+    startTokenRefresh: (state) => {
+      state.isTokenRefreshing = true;
+    },
+    finishTokenRefresh: (state) => {
+      state.isTokenRefreshing = false;
     },
   },
   extraReducers: (builder) => {
@@ -114,5 +122,11 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearMessages, updateUser, manualLogout } = authSlice.actions;
+export const {
+  clearMessages,
+  updateUser,
+  manualLogout,
+  startTokenRefresh,
+  finishTokenRefresh,
+} = authSlice.actions;
 export default authSlice.reducer;

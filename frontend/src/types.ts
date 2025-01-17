@@ -96,3 +96,12 @@ export interface Appointment {
 export interface AppointmentResponse {
   data: Appointment;
 }
+
+export interface QueryParams {
+  sort?: string;
+  order?: "asc" | "desc";
+  page?: number;
+  limit?: number;
+  priceRange?: string;
+  rating?: number;
+}

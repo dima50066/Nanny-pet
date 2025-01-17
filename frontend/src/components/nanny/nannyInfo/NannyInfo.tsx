@@ -13,11 +13,12 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
           <h2 className="text-xl font-bold text-gray-800">{nanny.name}</h2>
           <p className="text-sm text-gray-500">{nanny.location}</p>
         </div>
-        <p className="text-lg font-medium text-main">{nanny.price_per_hour}</p>
+        <p className="text-lg font-medium text-main">${nanny.price_per_hour}</p>
       </div>
       <div className="text-sm text-gray-600 mb-4">
         <p>
-          <span className="font-bold">Characters:</span> {nanny.characters}
+          <span className="font-bold">Characters:</span>{" "}
+          {nanny.characters.join(", ")}
         </p>
         <p>
           <span className="font-bold">Education:</span> {nanny.education}
