@@ -155,4 +155,29 @@ section {
   .custom-options {
     @apply bg-white text-[#11101c];
   }
+
+  /* NANNIES */
+
+  .nannies-header-text {
+    @apply font-medium text-[16px] leading-[150%] text-[#11101c];
+  }
+
+  .nannies-name {
+    @apply font-medium text-[24px] leading-[100%] text-[#11101c];
+  }
+
+  .nannies-panels {
+    @apply bg-[#f3f3f3] px-4 py-2 rounded-[24px] text-center w-auto flex;
+  }
+
+  .nannies-panels-title {
+    @apply pr-1 font-medium text-[16px] leading-[150%] text-[#8a8a89];
+  }
+  .nannies-panels-text {
+    @apply text-[#11101c] font-medium text-[16px] leading-[150%];
+  }
+
+  .nannies-read-more {
+    @apply font-medium text-base leading-[150%] underline  text-[#11101c];
+  }
 }
