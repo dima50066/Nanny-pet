@@ -146,4 +146,13 @@ section {
   .authNavBtn {
     @apply w-32 border border-white/40 rounded-3xl px-6 py-3 text-white leading-[1.25] hover:bg-white hover:text-main transition;
   }
+
+  /* FILTERS */
+
+  .custom-select {
+    @apply bg-main text-white border-none relative rounded-[14px] focus:outline-none appearance-none;
+  }
+  .custom-options {
+    @apply bg-white text-[#11101c];
+  }
 }

@@ -1,3 +1,6 @@
+import { useState } from "react";
+import Icon from "../../shared/icon/Icon";
+
 interface FiltersProps {
   filters: {
     sortBy: string;
@@ -8,71 +11,64 @@ interface FiltersProps {
   onFilterChange: (filters: Partial<FiltersProps["filters"]>) => void;
 }
 
+interface Option {
+  label: string;
+  value: {
+    sortBy?: string;
+    order?: string;
+    priceRange?: string;
+  };
+}
+
 const Filters: React.FC<FiltersProps> = ({ filters, onFilterChange }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
+  const [isOpen, setIsOpen] = useState(false);
 
-    // Очищуємо старі фільтри перед відправкою нових
-    let newFilters: Partial<FiltersProps["filters"]> = {};
+  const options: Option[] = [
+    { label: "A to Z", value: { sortBy: "name", order: "asc" } },
+    { label: "Z to A", value: { sortBy: "name", order: "desc" } },
+    { label: "Less than 10$", value: { priceRange: "0-10" } },
+    { label: "Greater than 10$", value: { priceRange: "10-100" } },
+    { label: "Popular", value: { sortBy: "rating", order: "desc" } },
+    { label: "Not popular", value: { sortBy: "rating", order: "asc" } },
+    { label: "Show all", value: {} },
+  ];
 
-    switch (value) {
-      case "A to Z":
-        newFilters = { sortBy: "name", order: "asc" };
-        break;
-      case "Z to A":
-        newFilters = { sortBy: "name", order: "desc" };
-        break;
-      case "Less than 10$":
-        newFilters = { priceRange: "0-10" };
-        break;
-      case "Greater than 10$":
-        newFilters = { priceRange: "10-100" };
-        break;
-      case "Popular":
-        newFilters = { sortBy: "rating", order: "desc" };
-        break;
-      case "Not popular":
-        newFilters = { sortBy: "rating", order: "asc" };
-        break;
-      case "Show all":
-        newFilters = {}; // Скидаємо всі фільтри
-        break;
-      default:
-        break;
-    }
-
-    // Передаємо нові фільтри в Redux
-    onFilterChange(newFilters);
+  const handleOptionClick = (option: Option) => {
+    onFilterChange(option.value);
+    setIsOpen(false);
   };
 
   const getSelectValue = () => {
-    if (filters.sortBy === "name") {
-      return filters.order === "asc" ? "A to Z" : "Z to A";
-    } else if (filters.priceRange === "0-10") {
-      return "Less than 10$";
-    } else if (filters.priceRange === "10-100") {
-      return "Greater than 10$";
-    } else if (filters.sortBy === "rating") {
-      return filters.order === "desc" ? "Popular" : "Not popular";
-    }
-    return "Show all";
+    const selectedOption = options.find(
+      (option) => JSON.stringify(option.value) === JSON.stringify(filters)
+    );
+    return selectedOption ? selectedOption.label : "Select";
   };
 
   return (
-    <div className="mb-6">
-      <select
-        value={getSelectValue()}
-        onChange={handleChange}
-        className="block w-full p-2 mb-4 border rounded-md"
+    <div className="relative pt-[64px]">
+      <p className="text-subtitle pb-[8px]">Filters</p>
+      <div
+        className="w-[226px] h-[48px] bg-[#1e3a3a] text-white rounded-[14px] px-[18px] py-[14px] cursor-pointer flex justify-between items-center"
+        onClick={() => setIsOpen(!isOpen)}
       >
-        <option value="A to Z">A to Z</option>
-        <option value="Z to A">Z to A</option>
-        <option value="Less than 10$">Less than 10$</option>
-        <option value="Greater than 10$">Greater than 10$</option>
-        <option value="Popular">Popular</option>
-        <option value="Not popular">Not popular</option>
-        <option value="Show all">Show all</option>
-      </select>
+        {getSelectValue()}
+        <Icon id="checkmark-down" className="w-5 h-5 text-white" />
+      </div>
+
+      {isOpen && (
+        <ul className="absolute top-[150px] w-[226px] h-[244px] bg-white shadow-md rounded-[14px] space-y-2 z-10 px-[18px] py-[14px]">
+          {options.map((option, index) => (
+            <li
+              key={index}
+              className=" text-[rgba(17,16,28,0.5)] hover:text-black cursor-pointer"
+              onClick={() => handleOptionClick(option)}
+            >
+              {option.label}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
