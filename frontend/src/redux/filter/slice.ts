@@ -1,12 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface FilterState {
-  filters: { sort: string };
+export interface FilterState {
+  filters: {
+    sortBy: string;
+    order: string;
+    priceRange?: string;
+    rating?: number;
+  };
   page: number;
 }
 
 const initialState: FilterState = {
-  filters: { sort: "A to Z" },
+  filters: { sortBy: "name", order: "asc" },
   page: 1,
 };
 
@@ -14,9 +19,9 @@ const filterSlice = createSlice({
   name: "filter",
   initialState,
   reducers: {
-    setFilters(state, action: PayloadAction<{ sort: string }>) {
-      state.filters = action.payload;
-      state.page = 1;
+    setFilters(state, action: PayloadAction<Partial<FilterState["filters"]>>) {
+      state.filters = action.payload as FilterState["filters"];
+      state.page = 1; // Скидаємо сторінку при зміні фільтрів
     },
     setPage(state, action: PayloadAction<number>) {
       state.page = action.payload;

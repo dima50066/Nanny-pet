@@ -19,7 +19,11 @@ const initialState: NannyState = {
 const nanniesSlice = createSlice({
   name: "nannies",
   initialState,
-  reducers: {},
+  reducers: {
+    resetHasFetched(state) {
+      state.hasFetched = false; // Скидаємо флажок
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchFilteredNannies.pending, (state) => {
