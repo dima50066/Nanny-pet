@@ -57,20 +57,9 @@ const Nannies: React.FC = () => {
         <Filters filters={filters} onFilterChange={handleFilterChange} />
         {loading && <p>Loading...</p>}
         {!loading && nannies.length === 0 && <p>No nannies found.</p>}
-        <div ref={listRef}>
-          <MemoizedNanniesList nannies={nannies} />
-        </div>
-        <div className="mt-[64px] items-center flex justify-center">
-          {!loading && nannies.length > 0 && hasMore && (
-            <button
-              className="nannies-loadMore bg-main"
-              onClick={handleLoadMore}
-            >
-              Load more
-            </button>
-          )}
-          {!hasMore && !loading && nannies.length > 0 && (
-            <p>No more nannies to load.</p>
+        <NanniesList nannies={nannies} />
+        {!loading && hasMoreItems && (
+
           )}
         </div>
       </div>
