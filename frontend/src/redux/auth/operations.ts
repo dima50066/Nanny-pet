@@ -9,7 +9,6 @@ import {
   AxiosErrorResponse,
   ResetResponse,
 } from "../../types";
-import { startTokenRefresh, finishTokenRefresh } from "./slice";
 
 export const registerUser = createAsyncThunk(
   "auth/register",
@@ -69,10 +68,8 @@ export const logoutUser = createAsyncThunk(
 
 export const refreshSession = createAsyncThunk(
   "auth/refreshSession",
-  async (_, { dispatch, rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      dispatch(startTokenRefresh());
-
       const response = await axiosInstance.post<LoginResponse>("/auth/refresh");
       const { accessToken } = response.data.data;
 
@@ -84,8 +81,6 @@ export const refreshSession = createAsyncThunk(
       return rejectWithValue(
         err.response?.data.message || "Session refresh failed"
       );
-    } finally {
-      dispatch(finishTokenRefresh());
     }
   }
 );

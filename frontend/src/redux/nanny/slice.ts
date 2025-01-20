@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 import { Nanny } from "../../types";
 import {
   fetchFilteredNannies,
@@ -14,77 +16,58 @@ interface NannyState {
   items: Nanny[];
   loading: boolean;
   error: string | null;
-  page: number;
-  hasFetched: boolean;
-  hasMore: boolean;
   currentNanny: Nanny | null;
   favorites: Nanny[];
   myNannyProfile: Nanny | null;
+  currentPage: number;
+  totalPages: number;
 }
 
 const initialState: NannyState = {
   items: [],
   loading: false,
   error: null,
-  page: 0,
-  hasFetched: false,
-  hasMore: true,
   currentNanny: null,
   favorites: [],
   myNannyProfile: null,
+  currentPage: 1,
+  totalPages: 1,
 };
 
 const nanniesSlice = createSlice({
   name: "nannies",
   initialState,
-  reducers: {
-    resetHasFetched(state) {
-      state.hasFetched = false;
-    },
-    setPage(state, action) {
-      state.page = action.payload;
-    },
-    setHasMore(state, action) {
-      state.hasMore = action.payload;
-    },
-    resetPage(state) {
-      state.page = 1;
-      state.hasMore = true;
-      state.items = [];
-    },
-    resetItems(state) {
-      state.items = [];
-    },
-    resetFavorites(state) {
-      state.favorites = [];
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchFilteredNannies.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchFilteredNannies.fulfilled, (state, action) => {
-        if (state.page === 1) {
+        state.loading = false;
+        if (action.meta.arg.page === 1) {
           state.items = action.payload.nannies;
         } else {
-          state.items.push(...action.payload.nannies);
+          state.items = [...state.items, ...action.payload.nannies];
         }
-
-        if (action.payload.nannies.length < 3) {
-          state.hasMore = false;
-        }
-
-        state.loading = false;
-        state.hasFetched = true;
+        state.currentPage = action.payload.currentPage;
+        state.totalPages = action.payload.totalPages;
       })
       .addCase(fetchFilteredNannies.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to fetch nannies";
-        state.hasFetched = true;
+      })
+      .addCase(fetchFavorites.pending, (state) => {
+        state.loading = true;
       })
       .addCase(fetchFavorites.fulfilled, (state, action) => {
         state.favorites = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchFavorites.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch favorites";
       })
       .addCase(addToFavorites.fulfilled, (state, action) => {
         state.favorites = action.payload;
@@ -107,12 +90,10 @@ const nanniesSlice = createSlice({
   },
 });
 
-export const {
-  resetHasFetched,
-  resetFavorites,
-  resetItems,
-  setPage,
-  setHasMore,
-  resetPage,
-} = nanniesSlice.actions;
-export default nanniesSlice.reducer;
+const persistConfig = {
+  key: "nannies",
+  storage,
+  whitelist: ["favorites", "items"],
+};
+
+export default persistReducer(persistConfig, nanniesSlice.reducer);

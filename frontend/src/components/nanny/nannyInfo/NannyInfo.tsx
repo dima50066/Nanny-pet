@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Nanny as NannyType } from "../../../types";
 import Icon from "../../../shared/icon/Icon";
-import { useAppDispatch, useAppSelector } from "../../../redux/store";
 import {
   addToFavorites,
   removeFromFavorites,
 } from "../../../redux/nanny/operations";
 import { selectFavorites } from "../../../redux/nanny/selectors";
+import { useSelector, useDispatch } from "react-redux";
+import { AppDispatch } from "../../../redux/store";
 
 interface NannyProps {
   nanny: NannyType;
@@ -14,13 +15,14 @@ interface NannyProps {
 
 const Nanny: React.FC<NannyProps> = ({ nanny }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const dispatch = useAppDispatch();
-  const favorites = useAppSelector(selectFavorites);
+  const dispatch = useDispatch<AppDispatch>();
+  const favorites = useSelector(selectFavorites);
 
-  // Перевірка, чи є няня в обраних
-  const isFavorite = favorites.some((favNanny) => favNanny._id === nanny._id);
+  const isFavorite = useMemo(() => {
+    return favorites.some((favNanny) => favNanny._id === nanny._id);
+  }, [favorites, nanny._id]);
 
-  console.log(isFavorite);
+  useEffect(() => {}, [favorites, isFavorite]);
 
   const handleFavoriteClick = () => {
     if (isFavorite) {
@@ -33,7 +35,6 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
   const handleReadMoreClick = () => {
     setIsExpanded(!isExpanded);
   };
-
   return (
     <div className="flex p-6 bg-[#fbfbfb] border rounded-[24px]">
       <div className="flex-shrink-0 mr-6">
@@ -70,9 +71,7 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
         <div className="pb-[24px]">
           <h2 className="nannies-name">{nanny.name}</h2>
         </div>
-        <div className="flex gap-2 flex-wrap pb-[24px]">
-          {/* Інша інформація про няню */}
-        </div>
+        <div className="flex gap-2 flex-wrap pb-[24px]"></div>
         <div>
           <p className="text-sm text-gray-600 mb-4">
             {nanny.about.length > 100

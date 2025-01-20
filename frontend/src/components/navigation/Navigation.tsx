@@ -1,9 +1,9 @@
 import { NavLink } from "react-router-dom";
-import { useAppSelector } from "../../redux/store";
 import { selectIsLoggedIn } from "../../redux/auth/selectors";
+import { useSelector } from "react-redux";
 
 const Navigation = () => {
-  const isLoggedIn = useAppSelector(selectIsLoggedIn);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
 
   return (
     <nav className="flex justify-center">

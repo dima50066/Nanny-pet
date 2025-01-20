@@ -8,6 +8,8 @@ import {
   resetPassword,
 } from "./operations";
 import { User } from "../../types";
+import persistReducer from "redux-persist/lib/persistReducer";
+import storage from "redux-persist/lib/storage";
 
 interface AuthState {
   user: User | null;
@@ -16,7 +18,7 @@ interface AuthState {
   error: string | null;
   successMessage: string | null;
   isAuthenticated: boolean;
-  isTokenRefreshing: boolean;
+  isRefreshing: boolean;
 }
 
 const initialState: AuthState = {
@@ -26,43 +28,41 @@ const initialState: AuthState = {
   error: null,
   successMessage: null,
   isAuthenticated: false,
-  isTokenRefreshing: false,
+  isRefreshing: false,
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    clearMessages: (state) => {
-      state.error = null;
-      state.successMessage = null;
-    },
-    updateUser: (state, action: PayloadAction<User>) => {
-      state.user = action.payload;
-    },
-    manualLogout: (state) => {
-      state.user = null;
-      state.token = null;
-      state.isAuthenticated = false;
-    },
-    startTokenRefresh: (state) => {
-      state.isTokenRefreshing = true;
-    },
-    finishTokenRefresh: (state) => {
-      state.isTokenRefreshing = false;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
+      // Register
+      .addCase(registerUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(
         registerUser.fulfilled,
         (state, action: PayloadAction<{ user: User }>) => {
           state.isLoading = false;
           state.user = action.payload.user;
-          state.successMessage = "Registration successful!";
           state.isAuthenticated = true;
         }
       )
+      .addCase(
+        registerUser.rejected,
+        (state, action: PayloadAction<unknown>) => {
+          state.isLoading = false;
+          state.error = (action.payload as string) || "Registration failed";
+        }
+      )
+
+      // Login
+      .addCase(loginUser.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(
         loginUser.fulfilled,
         (state, action: PayloadAction<{ user: User; token: string }>) => {
@@ -70,63 +70,96 @@ const authSlice = createSlice({
           state.user = action.payload.user;
           state.token = action.payload.token;
           state.isAuthenticated = true;
-          localStorage.setItem("token", action.payload.token);
-          localStorage.setItem("user", JSON.stringify(action.payload.user));
         }
       )
+      .addCase(loginUser.rejected, (state, action: PayloadAction<unknown>) => {
+        state.isLoading = false;
+        state.error = (action.payload as string) || "Login failed";
+      })
+
+      // Logout
+      .addCase(logoutUser.pending, (state) => {
+        state.isLoading = true;
+      })
       .addCase(logoutUser.fulfilled, (state) => {
         state.isLoading = false;
         state.user = null;
         state.token = null;
         state.isAuthenticated = false;
       })
+      .addCase(logoutUser.rejected, (state, action: PayloadAction<unknown>) => {
+        state.isLoading = false;
+        state.error = (action.payload as string) || "Logout failed";
+      })
+
+      // Refresh Session
+      .addCase(refreshSession.pending, (state) => {
+        state.isRefreshing = true;
+      })
       .addCase(
         refreshSession.fulfilled,
         (state, action: PayloadAction<string>) => {
           state.token = action.payload;
           state.isAuthenticated = true;
+          state.isRefreshing = false;
         }
       )
+      .addCase(
+        refreshSession.rejected,
+        (state, action: PayloadAction<unknown>) => {
+          state.isLoading = false;
+          state.isRefreshing = false;
+          state.error = (action.payload as string) || "Session refresh failed";
+        }
+      )
+
+      // Request Password Reset
+      .addCase(requestPasswordReset.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(
         requestPasswordReset.fulfilled,
         (state, action: PayloadAction<string>) => {
+          state.isLoading = false;
           state.successMessage = action.payload;
         }
       )
       .addCase(
+        requestPasswordReset.rejected,
+        (state, action: PayloadAction<unknown>) => {
+          state.isLoading = false;
+          state.error =
+            (action.payload as string) || "Password reset request failed";
+        }
+      )
+
+      // Reset Password
+      .addCase(resetPassword.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(
         resetPassword.fulfilled,
         (state, action: PayloadAction<string>) => {
+          state.isLoading = false;
           state.successMessage = action.payload;
         }
       )
-      .addMatcher(
-        (action) => action.type.endsWith("/pending"),
-        (state) => {
-          state.isLoading = true;
-          state.error = null;
-        }
-      )
-      .addMatcher(
-        (action) => action.type.endsWith("/rejected"),
-        (state, action: PayloadAction<string>) => {
+      .addCase(
+        resetPassword.rejected,
+        (state, action: PayloadAction<unknown>) => {
           state.isLoading = false;
-          state.error = action.payload;
-        }
-      )
-      .addMatcher(
-        (action) => action.type.endsWith("/fulfilled"),
-        (state) => {
-          state.isLoading = false;
+          state.error = (action.payload as string) || "Password reset failed";
         }
       );
   },
 });
 
-export const {
-  clearMessages,
-  updateUser,
-  manualLogout,
-  startTokenRefresh,
-  finishTokenRefresh,
-} = authSlice.actions;
-export default authSlice.reducer;
+const persistConfig = {
+  key: "auth",
+  storage,
+  whitelist: ["token", "isAuthenticated", "user"],
+};
+
+export default persistReducer(persistConfig, authSlice.reducer);

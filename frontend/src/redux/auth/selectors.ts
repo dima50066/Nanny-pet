@@ -8,5 +8,4 @@ export const selectSuccessMessage = (state: RootState) =>
   state.auth.successMessage;
 export const selectIsLoggedIn = (state: RootState) =>
   state.auth.isAuthenticated && !!state.auth.token;
-export const selectIsTokenRefreshing = (state: RootState) =>
-  state.auth.isTokenRefreshing;
+export const selectIsRefreshing = (state: RootState) => state.auth.isRefreshing;

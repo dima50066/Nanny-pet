@@ -1,21 +1,36 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import storage from "redux-persist/lib/storage";
+import { persistReducer, persistStore } from "redux-persist";
+import { combineReducers } from "redux";
 import authReducer from "./auth/slice";
 import nannyReducer from "./nanny/slice";
-import appointmentReducer from "./appointment/slice";
 import filtersReducer from "./filter/slice";
+import appointmentReducer from "./appointment/slice";
+
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["auth", "nannies"],
+};
+
+const rootReducer = combineReducers({
+  auth: authReducer,
+  nannies: nannyReducer,
+  filters: filtersReducer,
+  appointment: appointmentReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: {
-    nannies: nannyReducer,
-    auth: authReducer,
-    appointment: appointmentReducer,
-    filters: filtersReducer,
-  },
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
+
+export const persistor = persistStore(store);
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
-
-export const useAppDispatch = () => useDispatch<AppDispatch>();
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

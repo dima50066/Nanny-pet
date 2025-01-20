@@ -1,18 +1,19 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useAppSelector } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../redux/auth/operations";
 import Modal from "../../shared/modal/Modal";
 import LoginModal from "../modals/Login";
 import RegisterModal from "../modals/Register";
 import Icon from "../../shared/icon/Icon";
 import { selectIsLoggedIn, selectUser } from "../../redux/auth/selectors";
-import { AppDispatch } from "../../redux/store";
+import { AppDispatch, RootState } from "../../redux/store";
 
 const AuthNav: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const isAuthenticated = useAppSelector(selectIsLoggedIn);
-  const user = useAppSelector(selectUser);
+  const isAuthenticated = useSelector((state: RootState) =>
+    selectIsLoggedIn(state)
+  );
+  const user = useSelector((state: RootState) => selectUser(state));
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] =
     useState<boolean>(false);
