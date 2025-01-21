@@ -1,9 +1,10 @@
 import mongoose, { Document, Schema, Types } from "mongoose";
+import { Nanny } from "./nanny";
 
 export interface User extends Document {
   email: string;
   password: string;
-  favorites: Types.ObjectId[];
+  favorites: Types.ObjectId[] | Nanny[];
   name?: string;
   createdAt: Date;
   updatedAt: Date;

@@ -1,6 +1,7 @@
 import { NanniesCollection } from "../db/models/nanny";
 import { Nanny } from "../db/models/nanny";
 import createHttpError from "http-errors";
+import { UsersCollection } from "../db/models/user";
 
 export const createNannyProfile = async (payload: Nanny) => {
   const existingNanny = await NanniesCollection.findOne({
@@ -53,31 +54,73 @@ export const getFilteredNannies = async (query: any) => {
 
   const filter: any = {};
 
-  // Фільтрація за ціною
   if (priceRange) {
     const [min, max] = priceRange.split("-").map(Number);
     filter.price_per_hour = { $gte: min, $lte: max };
   }
 
-  // Фільтрація за рейтингом
   if (rating) {
     filter.rating = { $gte: Number(rating) };
   }
 
-  // Сортування
   const sort: any = { [sortBy]: order === "asc" ? 1 : -1 };
 
-  // Пагінація
   const skip = (Number(page) - 1) * Number(limit);
 
-  // Отримання даних із бази
   const nannies = await NanniesCollection.find(filter)
     .sort(sort)
     .skip(skip)
     .limit(Number(limit));
 
-  // Загальна кількість для пагінації
   const totalCount = await NanniesCollection.countDocuments(filter);
 
   return { nannies, totalCount };
+};
+
+export const getFilteredFavorites = async (userId: string, query: any) => {
+  const {
+    sortBy = "name",
+    order = "asc",
+    page = 0,
+    limit = 3,
+    priceRange,
+    rating,
+  } = query;
+
+  const user = await UsersCollection.findById(userId).populate("favorites");
+  if (!user) {
+    throw createHttpError(404, "User not found");
+  }
+
+  const favorites = user.favorites as Nanny[];
+
+  let filtered = favorites;
+
+  if (priceRange) {
+    const [min, max] = priceRange.split("-").map(Number);
+    filtered = filtered.filter(
+      (nanny) => nanny.price_per_hour >= min && nanny.price_per_hour <= max
+    );
+  }
+
+  if (rating) {
+    filtered = filtered.filter((nanny) => nanny.rating >= Number(rating));
+  }
+
+  filtered.sort((a, b) => {
+    const valueA = a[sortBy as keyof Nanny];
+    const valueB = b[sortBy as keyof Nanny];
+    if (order === "asc") {
+      return valueA > valueB ? 1 : -1;
+    }
+    return valueA < valueB ? 1 : -1;
+  });
+
+  const totalCount = filtered.length;
+  const start = (Number(page) - 1) * Number(limit);
+  const end = start + Number(limit);
+
+  const paginatedFavorites = filtered.slice(start, end);
+
+  return { favorites: paginatedFavorites, totalCount };
 };

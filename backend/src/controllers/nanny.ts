@@ -6,6 +6,7 @@ import {
   updateNannyProfile,
   deleteNannyProfile,
   getFilteredNannies,
+  getFilteredFavorites,
 } from "../services/nanny";
 import { UsersCollection } from "../db/models/user";
 import { NanniesCollection } from "../db/models/nanny";
@@ -222,6 +223,37 @@ export const getNannyByIdController = async (
       status: 200,
       message: "Nanny fetched successfully!",
       data: nanny,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getFilteredFavoritesController = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.user?._id;
+
+    if (!userId) {
+      throw new Error("User not authenticated");
+    }
+
+    const { favorites, totalCount } = await getFilteredFavorites(
+      userId.toString(),
+      req.query
+    );
+
+    res.json({
+      status: 200,
+      message: "Filtered favorites fetched successfully!",
+      data: {
+        favorites,
+        totalPages: Math.ceil(totalCount / 3),
+        currentPage: Number(req.query.page || 1),
+      },
     });
   } catch (error) {
     next(error);

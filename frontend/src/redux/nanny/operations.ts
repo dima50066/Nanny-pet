@@ -106,3 +106,29 @@ export const fetchMyNannyProfile = createAsyncThunk<
     return rejectWithValue("Failed to fetch nanny profile");
   }
 });
+
+export const fetchFilteredFavorites = createAsyncThunk<
+  NanniesListResponse["data"],
+  { page: number; filters: FilterState["filters"] },
+  { rejectValue: string }
+>(
+  "favorites/fetchFilteredFavorites",
+  async ({ page, filters }, { rejectWithValue }) => {
+    try {
+      const params = {
+        page,
+        sortBy: filters.sortBy,
+        order: filters.order,
+        ...(filters.priceRange && { priceRange: filters.priceRange }),
+        ...(filters.rating && { rating: filters.rating }),
+      };
+
+      const response = await axiosInstance.get(`nanny/favorites/filter`, {
+        params,
+      });
+      return response.data.data;
+    } catch {
+      return rejectWithValue("Failed to fetch filtered favorites");
+    }
+  }
+);

@@ -48,6 +48,7 @@ export interface Nanny {
   characters: string[];
   rating: number;
   reviews: Review[];
+
   createdAt: string;
   updatedAt: string;
 }
@@ -65,6 +66,7 @@ export interface NannyResponse {
 export interface NanniesListResponse {
   data: {
     nannies: Nanny[];
+    favorites: Nanny[];
     totalPages: number;
     currentPage: number;
   };

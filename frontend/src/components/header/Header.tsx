@@ -6,7 +6,8 @@ import AuthNav from "../authNav/AuthNav";
 const Header = () => {
   const location = useLocation();
 
-  const isCentered = location.pathname === "/nannies";
+  const isCentered =
+    location.pathname === "/nannies" || location.pathname === "/favorites";
 
   return (
     <header

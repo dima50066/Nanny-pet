@@ -1,15 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { fetchFilteredFavorites } from "../../redux/nanny/operations";
 import {
-  fetchFilteredNannies,
-  fetchFavorites,
-} from "../../redux/nanny/operations";
-import {
-  selectNannies,
+  selectFilteredFavorites,
+  selectFavoritesCurrentPage,
+  selectFavoritesTotalPages,
   selectLoading,
-  selectFavorites,
-  selectCurrentPage,
-  selectTotalPages,
 } from "../../redux/nanny/selectors";
 import { selectFilters } from "../../redux/filter/selectors";
 import Filters from "../../components/filters/Filters";
@@ -17,45 +13,36 @@ import Header from "../../components/header/Header";
 import NanniesList from "../../components/nanny/nanniesList/NanniesList";
 import { AppDispatch } from "../../redux/store";
 
-const Nannies: React.FC = () => {
+const FavoritesPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-
-  const nannies = useSelector(selectNannies);
+  const filteredFavorites = useSelector(selectFilteredFavorites);
   const loading = useSelector(selectLoading);
-  const favorites = useSelector(selectFavorites);
-  const currentPage = useSelector(selectCurrentPage);
-  const totalPages = useSelector(selectTotalPages);
   const filters = useSelector(selectFilters);
-
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const currentPage = useSelector(selectFavoritesCurrentPage);
+  const totalPages = useSelector(selectFavoritesTotalPages);
 
   useEffect(() => {
-    if (!isLoadingMore) {
-      dispatch(fetchFilteredNannies({ page: currentPage, filters }));
-    }
-    setIsLoadingMore(false);
+    dispatch(fetchFilteredFavorites({ page: currentPage, filters }));
   }, [dispatch, currentPage, filters]);
 
-  useEffect(() => {
-    if (favorites.length === 0) {
-      dispatch(fetchFavorites());
-    }
-  }, [dispatch, favorites.length]);
-
   const handleFilterChange = (newFilters: Partial<typeof filters>) => {
+    dispatch({
+      type: "filters/setFilters",
+      payload: { ...filters, ...newFilters },
+    });
     dispatch(
-      fetchFilteredNannies({ page: 1, filters: { ...filters, ...newFilters } })
+      fetchFilteredFavorites({
+        page: 1,
+        filters: { ...filters, ...newFilters },
+      })
     );
   };
 
   const handleLoadMore = () => {
-    if (currentPage < totalPages && !isLoadingMore) {
-      setIsLoadingMore(true);
-      dispatch(fetchFilteredNannies({ page: currentPage + 1, filters }));
+    if (currentPage < totalPages) {
+      dispatch(fetchFilteredFavorites({ page: currentPage + 1, filters }));
     }
   };
-
-  const hasMoreItems = currentPage < totalPages;
 
   return (
     <div className="container mx-auto py-8">
@@ -64,15 +51,15 @@ const Nannies: React.FC = () => {
       </div>
       <div className="container bg-[#F3F3F3]">
         <Filters onFilterChange={handleFilterChange} />
-        {loading && <p>Loading...</p>}
-        <NanniesList nannies={nannies} />
-        {!loading && hasMoreItems && (
+        {loading && <p className="text-center">Loading...</p>}
+        <NanniesList nannies={filteredFavorites} />
+        {!loading && currentPage < totalPages && (
           <div className="flex justify-center py-16">
             <button
               className="nannies-loadMore bg-main"
               onClick={handleLoadMore}
             >
-              Load more
+              Load More
             </button>
           </div>
         )}
@@ -81,4 +68,4 @@ const Nannies: React.FC = () => {
   );
 };
 
-export default Nannies;
+export default FavoritesPage;

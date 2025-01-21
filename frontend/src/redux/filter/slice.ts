@@ -21,7 +21,7 @@ const filterSlice = createSlice({
   reducers: {
     setFilters(state, action: PayloadAction<Partial<FilterState["filters"]>>) {
       state.filters = action.payload as FilterState["filters"];
-      state.page = 1; // Скидаємо сторінку при зміні фільтрів
+      state.page = 1;
     },
     setPage(state, action: PayloadAction<number>) {
       state.page = action.payload;

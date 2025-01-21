@@ -10,6 +10,7 @@ import {
   updateNannyProfile,
   fetchMyNannyProfile,
   fetchNannyById,
+  fetchFilteredFavorites,
 } from "./operations";
 
 interface NannyState {
@@ -18,9 +19,12 @@ interface NannyState {
   error: string | null;
   currentNanny: Nanny | null;
   favorites: Nanny[];
+  filteredFavorites: Nanny[];
   myNannyProfile: Nanny | null;
   currentPage: number;
   totalPages: number;
+  favoritesCurrentPage: number;
+  favoritesTotalPages: number;
 }
 
 const initialState: NannyState = {
@@ -29,9 +33,12 @@ const initialState: NannyState = {
   error: null,
   currentNanny: null,
   favorites: [],
+  filteredFavorites: [],
   myNannyProfile: null,
   currentPage: 1,
   totalPages: 1,
+  favoritesCurrentPage: 1,
+  favoritesTotalPages: 1,
 };
 
 const nanniesSlice = createSlice({
@@ -57,6 +64,27 @@ const nanniesSlice = createSlice({
       .addCase(fetchFilteredNannies.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to fetch nannies";
+      })
+      .addCase(fetchFilteredFavorites.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchFilteredFavorites.fulfilled, (state, action) => {
+        state.loading = false;
+        if (action.meta.arg.page === 1) {
+          state.filteredFavorites = action.payload.favorites;
+        } else {
+          state.filteredFavorites = [
+            ...state.filteredFavorites,
+            ...action.payload.favorites,
+          ];
+        }
+        state.favoritesCurrentPage = action.payload.currentPage;
+        state.favoritesTotalPages = action.payload.totalPages;
+      })
+      .addCase(fetchFilteredFavorites.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch filtered favorites";
       })
       .addCase(fetchFavorites.pending, (state) => {
         state.loading = true;

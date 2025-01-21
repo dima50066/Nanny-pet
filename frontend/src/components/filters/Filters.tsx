@@ -2,26 +2,17 @@ import { useState } from "react";
 import Icon from "../../shared/icon/Icon";
 
 interface FiltersProps {
-  filters: {
-    sortBy: string;
-    order: string;
-    priceRange?: string;
-    rating?: number;
-  };
-  onFilterChange: (filters: Partial<FiltersProps["filters"]>) => void;
+  onFilterChange: (filters: Record<string, string | number>) => void;
 }
 
 interface Option {
   label: string;
-  value: {
-    sortBy?: string;
-    order?: string;
-    priceRange?: string;
-  };
+  value: Record<string, string | number>;
 }
 
-const Filters: React.FC<FiltersProps> = ({ filters, onFilterChange }) => {
+const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedLabel, setSelectedLabel] = useState("A to Z");
 
   const options: Option[] = [
     { label: "A to Z", value: { sortBy: "name", order: "asc" } },
@@ -34,15 +25,9 @@ const Filters: React.FC<FiltersProps> = ({ filters, onFilterChange }) => {
   ];
 
   const handleOptionClick = (option: Option) => {
+    setSelectedLabel(option.label);
     onFilterChange(option.value);
     setIsOpen(false);
-  };
-
-  const getSelectValue = () => {
-    const selectedOption = options.find(
-      (option) => JSON.stringify(option.value) === JSON.stringify(filters)
-    );
-    return selectedOption ? selectedOption.label : "Select";
   };
 
   return (
@@ -52,7 +37,7 @@ const Filters: React.FC<FiltersProps> = ({ filters, onFilterChange }) => {
         className="w-[226px] h-[48px] bg-[#1e3a3a] text-white rounded-[14px] px-[18px] py-[14px] cursor-pointer flex justify-between items-center"
         onClick={() => setIsOpen(!isOpen)}
       >
-        {getSelectValue()}
+        {selectedLabel}
         <Icon id="checkmark-down" className="w-5 h-5 text-white" />
       </div>
 
@@ -61,7 +46,7 @@ const Filters: React.FC<FiltersProps> = ({ filters, onFilterChange }) => {
           {options.map((option, index) => (
             <li
               key={index}
-              className=" text-[rgba(17,16,28,0.5)] hover:text-black cursor-pointer"
+              className="text-[rgba(17,16,28,0.5)] hover:text-black cursor-pointer"
               onClick={() => handleOptionClick(option)}
             >
               {option.label}
