@@ -50,15 +50,19 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
       <div className="flex-1">
         <div className="flex direction-row justify-between mb-[8px]">
           <p className="text-subtitle">Nanny</p>
-          <div className="flex direction-row items-center">
-            <Icon id="location" className="w-4 h-4 text-gray-500 mr-2" />
-            <p className="nannies-header-text">{nanny.location}</p>
-            <Icon id="star" className="w-4 h-4 text-yellow-400 mr-1" />
-            <p className="nannies-header-text">Rating: {nanny.rating}</p>
-            <p className="nannies-header-text flex gap-1 pr-[48px]">
-              Price / 1 hour:{" "}
+          <div className="flex direction-row items-center gap-4">
+            <div className="flex items-center gap-2 border-r border-gray-300 pr-4">
+              <Icon id="location" className="w-4 h-4 text-gray-500" />
+              <p className="nannies-header-text">{nanny.location}</p>
+            </div>
+            <div className="flex items-center gap-2 border-r border-gray-300 pr-4">
+              <Icon id="star" className="w-4 h-4 text-yellow-400" />
+              <p className="nannies-header-text">Rating: {nanny.rating}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <p className="nannies-header-text">Price / 1 hour:</p>
               <span className="text-[#38cd3e]">{nanny.price_per_hour}$</span>
-            </p>
+            </div>
             <Icon
               id={isFavorite ? "heart-filled" : "heart"}
               className={`w-6 h-6 cursor-pointer ${
@@ -68,6 +72,7 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
             />
           </div>
         </div>
+
         <div className="pb-[24px]">
           <h2 className="nannies-name">{nanny.name}</h2>
         </div>

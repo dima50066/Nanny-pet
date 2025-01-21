@@ -62,14 +62,19 @@ const Nannies: React.FC = () => {
       <div className="bg-main">
         <Header />
       </div>
-      <div className="container">
+      <div className="container bg-[#F3F3F3]">
         <Filters filters={filters} onFilterChange={handleFilterChange} />
         {loading && <p>Loading...</p>}
         <NanniesList nannies={nannies} />
         {!loading && hasMoreItems && (
-          <button className="nannies-loadMore bg-main" onClick={handleLoadMore}>
-            Load more
-          </button>
+          <div className="flex justify-center py-16">
+            <button
+              className="nannies-loadMore bg-main"
+              onClick={handleLoadMore}
+            >
+              Load more
+            </button>
+          </div>
         )}
       </div>
     </div>

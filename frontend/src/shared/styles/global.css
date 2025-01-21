@@ -147,6 +147,23 @@ section {
     @apply w-32 border border-white/40 rounded-3xl px-6 py-3 text-white leading-[1.25] hover:bg-white hover:text-main transition;
   }
 
+  .active-link {
+    @apply relative;
+  }
+
+  .active-link::after {
+    content: "";
+    @apply absolute bottom-[-16px] left-[50%] translate-x-[-50%] w-[9px] h-[9px] bg-white rounded-full;
+  }
+
+  .header-text {
+    @apply font-sans font-normal text-[16px] leading-[1.25] tracking-[-0.01em] text-[#fbfbfb];
+  }
+
+  .header-text:hover {
+    @apply text-gray-300;
+  }
+
   /* FILTERS */
 
   .custom-select {

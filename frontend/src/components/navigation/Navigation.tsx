@@ -9,18 +9,33 @@ const Navigation = () => {
     <nav className="flex justify-center">
       <ul className="flex flex-row gap-[40px] mx-auto">
         <li>
-          <NavLink to="/" className="header-text">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `header-text relative ${isActive ? "active-link" : ""}`
+            }
+          >
             Home
           </NavLink>
         </li>
         <li>
-          <NavLink to="/nannies" className="header-text">
+          <NavLink
+            to="/nannies"
+            className={({ isActive }) =>
+              `header-text relative ${isActive ? "active-link" : ""}`
+            }
+          >
             Nannies
           </NavLink>
         </li>
         {isLoggedIn && (
           <li>
-            <NavLink to="/favorites" className="header-text">
+            <NavLink
+              to="/favorites"
+              className={({ isActive }) =>
+                `header-text relative ${isActive ? "active-link" : ""}`
+              }
+            >
               Favorites
             </NavLink>
           </li>
