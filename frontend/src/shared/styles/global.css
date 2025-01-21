@@ -208,4 +208,29 @@ section {
   .nannies-reviewer-rating {
     @apply font-medium text-[14px] leading-[129%] text-[#11101c];
   }
+
+  /* Appointment */
+
+  .nannies-app-btn {
+    @apply bg-[#103931] text-white mt-[48px] py-[14px] px-[28px] w-[215px] h-[48px] rounded-[30px] hover:bg-[#0e312b] transition font-medium text-[16px] leading-[1.25] tracking-[-0.01em];
+  }
+
+  .nannies-app-input {
+    @apply input input-text w-full border-gray-300 focus:outline-none focus:ring-2 focus:ring-main rounded-lg px-4 py-2;
+  }
+
+  .nannies-app-input::placeholder {
+    @apply text-[#11101c] font-normal text-[16px] leading-[125%];
+  }
+
+  .nannies-app-title {
+    @apply font-medium text-[40px] leading-[120%] tracking-[-0.02em] text-[#11101c] mb-[20px];
+  }
+
+  .nannies-app-text-sub {
+    @apply font-medium text-[12px] leading-[133%] text-[#8a8a89];
+  }
+  .nannies-app-text-name {
+    @apply font-medium text-[16px] leading-[150%] text-[#11101c];
+  }
 }

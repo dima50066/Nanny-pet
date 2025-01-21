@@ -4,74 +4,94 @@ import { registerUser } from "../../redux/auth/operations";
 import { selectIsLoading, selectAuthError } from "../../redux/auth/selectors";
 import Icon from "../../shared/icon/Icon";
 import { AppDispatch } from "../../redux/store";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const schema = yup.object().shape({
+  name: yup.string().required("Name is required"),
+  email: yup
+    .string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  password: yup
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+});
 
 const RegisterModal = () => {
   const dispatch = useDispatch<AppDispatch>();
   const isLoading = useSelector(selectIsLoading);
   const authError = useSelector(selectAuthError);
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    dispatch(registerUser({ name, email, password }));
+  const onSubmit = (data: {
+    name: string;
+    email: string;
+    password: string;
+  }) => {
+    dispatch(registerUser(data));
   };
 
   return (
     <div className="p-[64px] w-[565px] h-[579px]">
-      {/* Заголовок */}
       <h1 className="text-title pb-[20px]">Registration</h1>
       <p className="text-subtitle pb-[40px]">
         Thank you for your interest in our platform! In order to register, we
         need some information. Please provide us with the following information.
       </p>
 
-      {/* Відображення помилок */}
       {authError && <p className="text-red-500 text-sm pb-4">{authError}</p>}
 
-      {/* Форма */}
-      <form onSubmit={handleSubmit}>
-        {/* Інпут для Name */}
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="relative mb-[18px]">
           <input
             type="text"
             placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            {...register("name")}
             className="input input-text"
-            required
           />
+          {errors.name && (
+            <p className="text-red-500 text-sm">{errors.name.message}</p>
+          )}
         </div>
 
-        {/* Інпут для Email */}
         <div className="relative mb-[18px]">
           <input
             type="email"
             placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            {...register("email")}
             className="input input-text"
-            required
           />
+          {errors.email && (
+            <p className="text-red-500 text-sm">{errors.email.message}</p>
+          )}
         </div>
 
-        {/* Інпут для Password */}
         <div className="relative mb-[40px]">
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="input input-text "
-            required
+            {...register("password")}
+            className="input input-text"
           />
+          {errors.password && (
+            <p className="text-red-500 text-sm">{errors.password.message}</p>
+          )}
           <button
             type="button"
             onClick={togglePasswordVisibility}
@@ -84,7 +104,6 @@ const RegisterModal = () => {
           </button>
         </div>
 
-        {/* Кнопка Sign Up */}
         <button
           type="submit"
           disabled={isLoading}

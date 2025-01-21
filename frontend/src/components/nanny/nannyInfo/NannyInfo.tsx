@@ -8,6 +8,8 @@ import {
 import { selectFavorites } from "../../../redux/nanny/selectors";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
+import Modal from "../../../shared/modal/Modal";
+import AppointmentForm from "../../appointment/Appointment";
 
 interface NannyProps {
   nanny: NannyType;
@@ -15,6 +17,7 @@ interface NannyProps {
 
 const Nanny: React.FC<NannyProps> = ({ nanny }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // State для модального вікна
   const dispatch = useDispatch<AppDispatch>();
   const favorites = useSelector(selectFavorites);
 
@@ -35,10 +38,19 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
   const handleReadMoreClick = () => {
     setIsExpanded(!isExpanded);
   };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="flex p-6 bg-[#fbfbfb] border rounded-[24px]">
       <div className="flex-shrink-0 mr-6">
-        <div className="relative w-[96px] h-[96px] rounded-[15px] border-[2px] border-[#f03f3b33]  p-[12px]">
+        <div className="relative w-[96px] h-[96px] rounded-[15px] border-[2px] border-[#f03f3b33] p-[12px]">
           <img
             src={nanny.avatar_url}
             alt={nanny.name}
@@ -119,9 +131,23 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
                 </div>
               ))}
             </div>
+            <button className="nannies-app-btn" onClick={handleOpenModal}>
+              Make an appointment
+            </button>
           </div>
         )}
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        classNameWrapper="rounded-[30px]"
+        onClose={handleCloseModal}
+      >
+        <AppointmentForm
+          nannyName={nanny.name}
+          nannyAvatar={nanny.avatar_url}
+        />{" "}
+      </Modal>
     </div>
   );
 };

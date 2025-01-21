@@ -4,61 +4,77 @@ import { loginUser } from "../../redux/auth/operations";
 import { selectIsLoading, selectAuthError } from "../../redux/auth/selectors";
 import Icon from "../../shared/icon/Icon";
 import { AppDispatch } from "../../redux/store";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const schema = yup.object().shape({
+  email: yup
+    .string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  password: yup
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+});
 
 const LogInModal = () => {
   const dispatch = useDispatch<AppDispatch>();
   const isLoading = useSelector(selectIsLoading);
   const authError = useSelector(selectAuthError);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    dispatch(loginUser({ email, password }));
+  const onSubmit = (data: { email: string; password: string }) => {
+    dispatch(loginUser(data));
   };
 
   return (
     <div className="p-[64px] w-[565px] h-[489px]">
-      {/* Заголовок */}
       <h1 className="text-title pb-[20px]">Log In</h1>
       <p className="text-subtitle pb-[40px]">
         Welcome back! Please enter your credentials to access your account and
         continue your babysitter search.
       </p>
 
-      {/* Відображення помилок */}
       {authError && <p className="text-red-500 text-sm pb-4">{authError}</p>}
 
-      {/* Форма */}
-      <form onSubmit={handleSubmit}>
-        {/* Інпут для Email */}
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="relative mb-4">
           <input
             type="email"
             placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            {...register("email")}
             className="input input-text focus:outline-none focus:ring-2 focus:ring-main"
-            required
           />
+          {errors.email && (
+            <p className="text-red-500 text-sm">{errors.email.message}</p>
+          )}
         </div>
 
-        {/* Інпут для Password */}
         <div className="relative mb-6">
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            {...register("password")}
             className="input input-text focus:outline-none focus:ring-2 focus:ring-main"
-            required
           />
+          {errors.password && (
+            <p className="text-red-500 text-sm">{errors.password.message}</p>
+          )}
           <button
             type="button"
             onClick={togglePasswordVisibility}
@@ -71,7 +87,6 @@ const LogInModal = () => {
           </button>
         </div>
 
-        {/* Кнопка Log In */}
         <button
           type="submit"
           disabled={isLoading}
