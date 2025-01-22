@@ -8,7 +8,7 @@ interface NanniesListProps {
 
 const NanniesList: React.FC<NanniesListProps> = ({ nannies }) => {
   return (
-    <div className="grid grid-cols-1 gap-[32px] pt-[32px]">
+    <div className="grid xl:grid-cols-1 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-[32px] pt-[32px]">
       {nannies.map((nanny) => (
         <Nanny key={nanny._id} nanny={nanny} />
       ))}

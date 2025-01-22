@@ -33,10 +33,10 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
   };
 
   return (
-    <div className="relative pt-[64px]">
+    <div className="relative pt-[64px] max-w-[400px] w-full">
       <p className="text-subtitle pb-[8px]">Filters</p>
       <div
-        className="w-[226px] h-[48px] bg-[#1e3a3a] text-white rounded-[14px] px-[18px] py-[14px] cursor-pointer flex justify-between items-center"
+        className="max-w-[226px] max-h-[48px] bg-[#1e3a3a] text-white rounded-[14px] px-[18px] py-[14px] cursor-pointer flex justify-between items-center"
         onClick={() => setIsOpen(!isOpen)}
       >
         {selectedLabel}
@@ -44,7 +44,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       </div>
 
       {isOpen && (
-        <ul className="absolute top-[150px] w-[226px] h-[244px] bg-white shadow-md rounded-[14px] space-y-2 z-10 px-[18px] py-[14px]">
+        <ul className="absolute top-[150px] max-w-[226px] max-h-[244px] bg-white shadow-md rounded-[14px] space-y-2 z-10 px-[18px] py-[14px]">
           {options.map((option, index) => (
             <li
               key={index}

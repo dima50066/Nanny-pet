@@ -45,11 +45,11 @@ const FavoritesPage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="bg-main">
+    <div className="container mx-auto py-8 w-full max-w-[1440px]">
+      <div className="bg-main max-w-[1440px]">
         <Header />
       </div>
-      <div className="container bg-[#F3F3F3]">
+      <div className="container bg-[#F3F3F3] w-full">
         <Filters onFilterChange={handleFilterChange} />
         {loading && <p className="text-center">Loading...</p>}
         <NanniesList nannies={filteredFavorites} />

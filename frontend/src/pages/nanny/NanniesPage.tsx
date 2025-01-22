@@ -58,11 +58,11 @@ const Nannies: React.FC = () => {
   const hasMoreItems = currentPage < totalPages;
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="bg-main">
+    <div className="container mx-auto py-8 w-full max-w-[1440px]">
+      <div className="bg-main max-w-[1440px]">
         <Header />
       </div>
-      <div className="container bg-[#F3F3F3]">
+      <div className="container bg-[#F3F3F3] w-full">
         <Filters onFilterChange={handleFilterChange} />
         {loading && <p>Loading...</p>}
         <NanniesList nannies={nannies} />

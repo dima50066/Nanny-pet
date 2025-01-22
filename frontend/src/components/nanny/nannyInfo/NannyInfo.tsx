@@ -56,7 +56,7 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
   };
 
   return (
-    <div className="flex p-6 bg-[#fbfbfb] border rounded-[24px]">
+    <div className="flex p-6 bg-[#fbfbfb] border rounded-[24px] w-full">
       <div className="flex-shrink-0 mr-6">
         <div className="relative w-[96px] h-[96px] rounded-[15px] border-[2px] border-[#f03f3b33] p-[12px]">
           <img
