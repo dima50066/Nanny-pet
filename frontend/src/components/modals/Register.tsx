@@ -7,6 +7,7 @@ import { AppDispatch } from "../../redux/store";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { toast } from "react-toastify";
 
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -39,12 +40,18 @@ const RegisterModal = () => {
     setShowPassword((prev) => !prev);
   };
 
-  const onSubmit = (data: {
+  const onSubmit = async (data: {
     name: string;
     email: string;
     password: string;
   }) => {
-    dispatch(registerUser(data));
+    try {
+      await dispatch(registerUser(data)).unwrap();
+      toast.success("Registration successful! Welcome aboard!");
+    } catch (error) {
+      toast.error("Registration failed! Please try again.");
+      console.error("Registration error:", error);
+    }
   };
 
   return (

@@ -6,7 +6,9 @@ import { selectIsLoading, selectToken } from "./redux/auth/selectors";
 import HomePage from "./pages/home/HomePage";
 import NanniesPage from "./pages/nanny/NanniesPage";
 import FavoritesPage from "./pages/favorites/Favorites";
+import PrivateRoute from "./components/routers/PrivateRoute";
 import { AppDispatch } from "./redux/store";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -29,9 +31,15 @@ const App = () => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/nannies" element={<NanniesPage />} />
-          <Route path="/favorites" element={<FavoritesPage />} />
+          <Route
+            path="/favorites"
+            element={
+              <PrivateRoute component={<FavoritesPage />} redirectTo="/" />
+            }
+          />
         </Routes>
       </main>
+      <ToastContainer />
     </Router>
   );
 };

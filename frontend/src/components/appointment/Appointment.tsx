@@ -8,11 +8,13 @@ import CustomTimePicker from "./CustomTimePicker";
 import { AppDispatch } from "../../redux/store";
 import { Appointment } from "../../types";
 import { selectUser } from "../../redux/auth/selectors";
+import { toast } from "react-toastify";
 
 interface AppointmentFormProps {
   nannyName: string;
   nannyAvatar: string;
   nannyId: string;
+  onCloseModal: () => void;
 }
 
 const schema = yup.object().shape({
@@ -51,6 +53,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
   nannyName,
   nannyAvatar,
   nannyId,
+  onCloseModal,
 }) => {
   const {
     register,
@@ -70,8 +73,11 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
     setValue("meetingTime", time);
   };
 
-  const onSubmit = (data: FormData) => {
-    if (!meetingTime || !user) return;
+  const onSubmit = async (data: FormData) => {
+    if (!meetingTime || !user) {
+      toast.error("Meeting time or user is missing.");
+      return;
+    }
 
     const appointmentData: Omit<Appointment, "_id"> = {
       ...data,
@@ -80,9 +86,13 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
       date: new Date().toISOString(),
     };
 
-    dispatch(createAppointment(appointmentData)).catch((error) =>
-      console.error("Error creating appointment", error)
-    );
+    try {
+      await dispatch(createAppointment(appointmentData)).unwrap();
+      toast.success("Appointment request sent successfully!");
+      onCloseModal();
+    } catch (error) {
+      console.error("Failed to send appointment request:", error);
+    }
   };
 
   return (

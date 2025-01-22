@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { Nanny as NannyType } from "../../../types";
 import Icon from "../../../shared/icon/Icon";
 import {
@@ -6,10 +6,12 @@ import {
   removeFromFavorites,
 } from "../../../redux/nanny/operations";
 import { selectFavorites } from "../../../redux/nanny/selectors";
+import { selectIsLoggedIn } from "../../../redux/auth/selectors";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
 import Modal from "../../../shared/modal/Modal";
 import AppointmentForm from "../../appointment/Appointment";
+import { toast } from "react-toastify";
 
 interface NannyProps {
   nanny: NannyType;
@@ -20,18 +22,24 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const favorites = useSelector(selectFavorites);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
 
   const isFavorite = useMemo(() => {
     return favorites.some((favNanny) => favNanny._id === nanny._id);
   }, [favorites, nanny._id]);
 
-  useEffect(() => {}, [favorites, isFavorite]);
-
   const handleFavoriteClick = () => {
+    if (!isLoggedIn) {
+      toast.error("You need to log in to add a nanny to favorites!");
+      return;
+    }
+
     if (isFavorite) {
       dispatch(removeFromFavorites({ nannyId: nanny._id }));
+      toast.success("Nanny removed from favorites.");
     } else {
       dispatch(addToFavorites({ nannyId: nanny._id }));
+      toast.success("Nanny added to favorites.");
     }
   };
 
@@ -88,7 +96,6 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
         <div className="pb-[24px]">
           <h2 className="nannies-name">{nanny.name}</h2>
         </div>
-        <div className="flex gap-2 flex-wrap pb-[24px]"></div>
         <div>
           <p className="text-sm text-gray-600 mb-4">
             {nanny.about.length > 100
@@ -111,7 +118,6 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
                     <div className="w-[44px] h-[44px] bg-gray-200 text-black text-center rounded-full flex items-center justify-center">
                       {review.reviewer.charAt(0)}
                     </div>
-
                     <div className="ml-2 flex flex-col">
                       <p className="nannies-reviewer-name pb-[4px]">
                         {review.reviewer}
@@ -147,7 +153,8 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
           nannyName={nanny.name}
           nannyAvatar={nanny.avatar_url}
           nannyId={nanny._id}
-        />{" "}
+          onCloseModal={handleCloseModal}
+        />
       </Modal>
     </div>
   );

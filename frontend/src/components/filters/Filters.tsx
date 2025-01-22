@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Icon from "../../shared/icon/Icon";
+import { toast } from "react-toastify";
 
 interface FiltersProps {
   onFilterChange: (filters: Record<string, string | number>) => void;
@@ -27,6 +28,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
   const handleOptionClick = (option: Option) => {
     setSelectedLabel(option.label);
     onFilterChange(option.value);
+    toast.success(`Filters applied: ${option.label}`);
     setIsOpen(false);
   };
 
