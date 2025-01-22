@@ -25,7 +25,7 @@ router.post(
   ctrlWrapper(createNannyController)
 );
 
-router.get("/", authenticate, ctrlWrapper(getNanniesController));
+router.get("/", ctrlWrapper(getNanniesController));
 
 router.get("/me", authenticate, ctrlWrapper(getMyNannyController));
 
@@ -50,6 +50,6 @@ router.get("/favorites", authenticate, ctrlWrapper(getFavoritesController));
 
 router.get("/:id", authenticate, ctrlWrapper(getNannyByIdController));
 
-router.get("/favorites/filter", authenticate, getFilteredFavoritesController);
+router.get("/favorites/filter", getFilteredFavoritesController);
 
 export default router;
