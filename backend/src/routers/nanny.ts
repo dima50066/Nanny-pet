@@ -50,6 +50,6 @@ router.get("/favorites", authenticate, ctrlWrapper(getFavoritesController));
 
 router.get("/:id", authenticate, ctrlWrapper(getNannyByIdController));
 
-router.get("/favorites/filter", getFilteredFavoritesController);
+router.get("/favorites/filter", authenticate, getFilteredFavoritesController);
 
 export default router;

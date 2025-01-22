@@ -12,6 +12,7 @@ import Filters from "../../components/filters/Filters";
 import Header from "../../components/header/Header";
 import NanniesList from "../../components/nanny/nanniesList/NanniesList";
 import { AppDispatch } from "../../redux/store";
+import Loader from "../../shared/loader/Loader";
 
 const FavoritesPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -51,17 +52,24 @@ const FavoritesPage: React.FC = () => {
       </div>
       <div className="container bg-[#F3F3F3] w-full">
         <Filters onFilterChange={handleFilterChange} />
-        {loading && <p className="text-center">Loading...</p>}
-        <NanniesList nannies={filteredFavorites} />
-        {!loading && currentPage < totalPages && (
+        {loading ? (
           <div className="flex justify-center py-16">
-            <button
-              className="nannies-loadMore bg-main"
-              onClick={handleLoadMore}
-            >
-              Load More
-            </button>
+            <Loader />
           </div>
+        ) : (
+          <>
+            <NanniesList nannies={filteredFavorites} />
+            {!loading && currentPage < totalPages && (
+              <div className="flex justify-center py-16">
+                <button
+                  className="nannies-loadMore bg-main"
+                  onClick={handleLoadMore}
+                >
+                  Load More
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
