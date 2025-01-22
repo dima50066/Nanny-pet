@@ -16,6 +16,8 @@ import Filters from "../../components/filters/Filters";
 import Header from "../../components/header/Header";
 import NanniesList from "../../components/nanny/nanniesList/NanniesList";
 import { AppDispatch } from "../../redux/store";
+import Loader from "../../shared/loader/Loader";
+import { toast, ToastContainer } from "react-toastify";
 
 const Nannies: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -28,6 +30,19 @@ const Nannies: React.FC = () => {
   const filters = useSelector(selectFilters);
 
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
+
+  useEffect(() => {
+    if (loading) {
+      setShowLoader(true);
+    } else {
+      const timeout = setTimeout(() => {
+        setShowLoader(false);
+      }, 2000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [loading]);
 
   useEffect(() => {
     if (!isLoadingMore) {
@@ -41,6 +56,14 @@ const Nannies: React.FC = () => {
       dispatch(fetchFavorites());
     }
   }, [dispatch, favorites.length]);
+
+  useEffect(() => {
+    if (!loading && nannies.length === 0) {
+      toast.info("No nannies found for the selected filters.", {
+        position: "top-center",
+      });
+    }
+  }, [loading, nannies.length]);
 
   const handleFilterChange = (newFilters: Partial<typeof filters>) => {
     dispatch(
@@ -63,18 +86,26 @@ const Nannies: React.FC = () => {
         <Header />
       </div>
       <div className="container bg-[#F3F3F3] w-full">
+        <ToastContainer />
         <Filters onFilterChange={handleFilterChange} />
-        {loading && <p>Loading...</p>}
-        <NanniesList nannies={nannies} />
-        {!loading && hasMoreItems && (
+        {showLoader ? (
           <div className="flex justify-center py-16">
-            <button
-              className="nannies-loadMore bg-main"
-              onClick={handleLoadMore}
-            >
-              Load more
-            </button>
+            <Loader />
           </div>
+        ) : (
+          <>
+            <NanniesList nannies={nannies} />
+            {!loading && hasMoreItems && (
+              <div className="flex justify-center py-16">
+                <button
+                  className="nannies-loadMore bg-main"
+                  onClick={handleLoadMore}
+                >
+                  Load more
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
