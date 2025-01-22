@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchFilteredFavorites } from "../../redux/nanny/operations";
 import {
@@ -22,6 +22,20 @@ const FavoritesPage: React.FC = () => {
   const filters = useSelector(selectFilters);
   const currentPage = useSelector(selectFavoritesCurrentPage);
   const totalPages = useSelector(selectFavoritesTotalPages);
+
+  const [showLoader, setShowLoader] = useState(false);
+
+  useEffect(() => {
+    if (loading) {
+      setShowLoader(true);
+    } else {
+      const timeout = setTimeout(() => {
+        setShowLoader(false);
+      }, 2000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [loading]);
 
   useEffect(() => {
     dispatch(fetchFilteredFavorites({ page: currentPage, filters }));
@@ -54,24 +68,22 @@ const FavoritesPage: React.FC = () => {
       <div className="container bg-[#F3F3F3] w-full">
         <ToastContainer />
         <Filters onFilterChange={handleFilterChange} />
-        {loading ? (
+        {showLoader ? (
           <div className="flex justify-center py-16">
             <Loader />
           </div>
         ) : (
-          <>
-            <NanniesList nannies={filteredFavorites} />
-            {!loading && currentPage < totalPages && (
-              <div className="flex justify-center py-16">
-                <button
-                  className="nannies-loadMore bg-main"
-                  onClick={handleLoadMore}
-                >
-                  Load More
-                </button>
-              </div>
-            )}
-          </>
+          <NanniesList nannies={filteredFavorites} />
+        )}
+        {!loading && !showLoader && currentPage < totalPages && (
+          <div className="flex justify-center py-16">
+            <button
+              className="nannies-loadMore bg-main"
+              onClick={handleLoadMore}
+            >
+              Load More
+            </button>
+          </div>
         )}
       </div>
     </div>
