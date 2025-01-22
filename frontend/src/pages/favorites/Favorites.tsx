@@ -13,6 +13,7 @@ import Header from "../../components/header/Header";
 import NanniesList from "../../components/nanny/nanniesList/NanniesList";
 import { AppDispatch } from "../../redux/store";
 import Loader from "../../shared/loader/Loader";
+import { ToastContainer } from "react-toastify";
 
 const FavoritesPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -51,6 +52,7 @@ const FavoritesPage: React.FC = () => {
         <Header />
       </div>
       <div className="container bg-[#F3F3F3] w-full">
+        <ToastContainer />
         <Filters onFilterChange={handleFilterChange} />
         {loading ? (
           <div className="flex justify-center py-16">

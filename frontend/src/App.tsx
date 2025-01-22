@@ -39,7 +39,12 @@ const App = () => {
           />
         </Routes>
       </main>
-      <ToastContainer />
+      <ToastContainer
+        position="top-right"
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+      />
     </Router>
   );
 };
