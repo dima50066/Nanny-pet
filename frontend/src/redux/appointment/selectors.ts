@@ -1,10 +1,7 @@
 import { RootState } from "../store";
 
 export const selectAppointments = (state: RootState) =>
-  state.appointment.appointments;
+  state.appointments.items;
 export const selectIsLoading = (state: RootState) =>
-  state.appointment.isLoading;
-export const selectAppointmentError = (state: RootState) =>
-  state.appointment.error;
-export const selectSuccessMessage = (state: RootState) =>
-  state.appointment.successMessage;
+  state.appointments.isLoading;
+export const selectError = (state: RootState) => state.appointments.error;

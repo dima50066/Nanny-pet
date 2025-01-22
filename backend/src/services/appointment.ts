@@ -5,22 +5,37 @@ export const createAppointment = async (payload: {
   userId: string;
   nannyId: string;
   date: Date;
-  message: string;
+  address: string;
+  phone: string;
+  childAge: number;
+  email: string;
+  parentName: string;
+  meetingTime: string;
+  comment: string;
 }) => {
   return await AppointmentsCollection.create(payload);
 };
 
-export const getAppointmentById = async (appointmentId: string) => {
-  const appointment = await AppointmentsCollection.findById(appointmentId);
-  if (!appointment) {
-    throw createHttpError(404, "Appointment not found");
+export const getAppointmentsByUserId = async (userId: string) => {
+  const appointments = await AppointmentsCollection.find({ userId });
+  if (!appointments || appointments.length === 0) {
+    throw createHttpError(404, "No appointments found for this user");
   }
-  return appointment;
+  return appointments;
 };
 
 export const updateAppointment = async (
   appointmentId: string,
-  updates: Partial<{ date: Date; message: string }>
+  updates: Partial<{
+    date: Date;
+    address: string;
+    phone: string;
+    childAge: number;
+    email: string;
+    parentName: string;
+    meetingTime: string;
+    comment: string;
+  }>
 ) => {
   const appointment = await AppointmentsCollection.findByIdAndUpdate(
     appointmentId,

@@ -2,11 +2,17 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { createAppointment } from "../../redux/appointment/operations";
 import CustomTimePicker from "./CustomTimePicker";
+import { AppDispatch } from "../../redux/store";
+import { Appointment } from "../../types";
+import { selectUser } from "../../redux/auth/selectors";
 
 interface AppointmentFormProps {
   nannyName: string;
   nannyAvatar: string;
+  nannyId: string;
 }
 
 const schema = yup.object().shape({
@@ -30,29 +36,53 @@ const schema = yup.object().shape({
   meetingTime: yup.string().required("Meeting time is required"),
 });
 
+type FormData = Pick<
+  Appointment,
+  | "address"
+  | "phone"
+  | "childAge"
+  | "email"
+  | "parentName"
+  | "comment"
+  | "meetingTime"
+>;
+
 const AppointmentForm: React.FC<AppointmentFormProps> = ({
   nannyName,
   nannyAvatar,
+  nannyId,
 }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+    setValue,
+  } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data: any) => {
-    console.log("Form submitted:", data);
-    // Send data to the server here
-  };
-
-  const [formData, setFormData] = useState({
-    meetingTime: "",
-  });
+  const dispatch = useDispatch<AppDispatch>();
+  const user = useSelector(selectUser);
+  const [meetingTime, setMeetingTime] = useState("");
 
   const handleTimeSelect = (time: string) => {
-    setFormData((prev) => ({ ...prev, meetingTime: time }));
+    setMeetingTime(time);
+    setValue("meetingTime", time);
+  };
+
+  const onSubmit = (data: FormData) => {
+    if (!meetingTime || !user) return;
+
+    const appointmentData: Omit<Appointment, "_id"> = {
+      ...data,
+      meetingTime,
+      nannyId,
+      date: new Date().toISOString(),
+    };
+
+    dispatch(createAppointment(appointmentData)).catch((error) =>
+      console.error("Error creating appointment", error)
+    );
   };
 
   return (
@@ -121,7 +151,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({
 
             <div>
               <CustomTimePicker
-                selectedTime={formData.meetingTime}
+                selectedTime={meetingTime}
                 onSelect={handleTimeSelect}
               />
             </div>

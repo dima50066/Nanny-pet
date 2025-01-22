@@ -10,14 +10,14 @@ import appointmentReducer from "./appointment/slice";
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "nannies"],
+  whitelist: ["auth", "nannies", "filters", "appointments"],
 };
 
 const rootReducer = combineReducers({
   auth: authReducer,
   nannies: nannyReducer,
   filters: filtersReducer,
-  appointment: appointmentReducer,
+  appointments: appointmentReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -1,93 +1,110 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
+  fetchAppointments,
   createAppointment,
   updateAppointment,
   deleteAppointment,
 } from "./operations";
-import { Appointment } from "../../types";
 
-interface AppointmentState {
-  appointments: Appointment[];
-  isLoading: boolean;
-  error: string | null;
-  successMessage: string | null;
+interface Appointment {
+  _id: string;
+  nannyId: string;
+  date: string;
+  address: string;
+  phone: string;
+  childAge: number;
+  email: string;
+  parentName: string;
+  meetingTime: string;
+  comment: string;
 }
 
-const initialState: AppointmentState = {
-  appointments: [],
+interface AppointmentsState {
+  items: Appointment[];
+  isLoading: boolean;
+  error: string | null;
+}
+
+const initialState: AppointmentsState = {
+  items: [],
   isLoading: false,
   error: null,
-  successMessage: null,
 };
 
-const appointmentSlice = createSlice({
-  name: "appointment",
+const appointmentsSlice = createSlice({
+  name: "appointments",
   initialState,
-  reducers: {
-    clearMessages: (state) => {
-      state.error = null;
-      state.successMessage = null;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(fetchAppointments.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(
-        createAppointment.fulfilled,
-        (state, action: PayloadAction<Appointment>) => {
-          state.appointments.push(action.payload);
+        fetchAppointments.fulfilled,
+        (state, action: PayloadAction<Appointment[]>) => {
           state.isLoading = false;
-          state.successMessage = "Appointment created successfully!";
+          state.items = action.payload;
         }
       )
+      .addCase(fetchAppointments.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || "Failed to fetch appointments";
+      })
       .addCase(createAppointment.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(createAppointment.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-      })
-
       .addCase(
-        updateAppointment.fulfilled,
+        createAppointment.fulfilled,
         (state, action: PayloadAction<Appointment>) => {
-          const index = state.appointments.findIndex(
-            (a) => a._id === action.payload._id
-          );
-          if (index !== -1) state.appointments[index] = action.payload;
           state.isLoading = false;
-          state.successMessage = "Appointment updated successfully!";
+          state.items.push(action.payload);
         }
       )
+      .addCase(createAppointment.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || "Failed to create appointment";
+      })
       .addCase(updateAppointment.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(updateAppointment.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-      })
-
       .addCase(
-        deleteAppointment.fulfilled,
-        (state, action: PayloadAction<string>) => {
-          state.appointments = state.appointments.filter(
-            (a) => a._id !== action.payload
-          );
+        updateAppointment.fulfilled,
+        (state, action: PayloadAction<Appointment>) => {
           state.isLoading = false;
-          state.successMessage = "Appointment deleted successfully!";
+          const index = state.items.findIndex(
+            (item) => item._id === action.payload._id
+          );
+          if (index !== -1) {
+            state.items[index] = action.payload;
+          }
         }
       )
+      .addCase(updateAppointment.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message || "Failed to update appointment";
+      })
       .addCase(deleteAppointment.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
+      .addCase(
+        deleteAppointment.fulfilled,
+        (state, action: PayloadAction<string>) => {
+          state.isLoading = false;
+          state.items = state.items.filter(
+            (item) => item._id !== action.payload
+          );
+        }
+      )
       .addCase(deleteAppointment.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = action.error.message || "Failed to delete appointment";
       });
   },
 });
 
-export const { clearMessages } = appointmentSlice.actions;
-export default appointmentSlice.reducer;
+export default appointmentsSlice.reducer;

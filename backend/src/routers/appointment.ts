@@ -4,6 +4,7 @@ import {
   createAppointmentController,
   updateAppointmentController,
   deleteAppointmentController,
+  getAppointmentsController,
 } from "../controllers/appointment";
 import { validateBody } from "../middlewares/validateBody";
 import {
@@ -20,6 +21,8 @@ router.post(
   validateBody(appointmentSchema),
   ctrlWrapper(createAppointmentController)
 );
+
+router.get("/", authenticate, ctrlWrapper(getAppointmentsController));
 
 router.patch(
   "/:id",

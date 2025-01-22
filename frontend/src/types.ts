@@ -88,11 +88,14 @@ export interface QueryParams {
 export interface Appointment {
   _id: string;
   nannyId: string;
-  userId: string;
   date: string;
-  message: string;
-  createdAt: string;
-  updatedAt: string;
+  address: string;
+  phone: string;
+  childAge: number;
+  email: string;
+  parentName: string;
+  meetingTime: string;
+  comment: string;
 }
 
 export interface AppointmentResponse {

@@ -17,7 +17,7 @@ interface NannyProps {
 
 const Nanny: React.FC<NannyProps> = ({ nanny }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); // State для модального вікна
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const favorites = useSelector(selectFavorites);
 
@@ -146,6 +146,7 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
         <AppointmentForm
           nannyName={nanny.name}
           nannyAvatar={nanny.avatar_url}
+          nannyId={nanny._id}
         />{" "}
       </Modal>
     </div>
