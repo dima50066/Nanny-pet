@@ -10,7 +10,7 @@ import { selectIsLoggedIn } from "../../../redux/auth/selectors";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch } from "../../../redux/store";
 import Modal from "../../../shared/modal/Modal";
-import AppointmentForm from "../../appointment/Appointment";
+import AppointmentForm from "../../appointment/CreateAppointment";
 import { toast } from "react-toastify";
 
 interface NannyProps {

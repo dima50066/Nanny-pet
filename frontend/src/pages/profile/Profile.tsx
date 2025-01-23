@@ -1,6 +1,7 @@
 import { useState } from "react";
 import CreateNannyProfile from "../../components/nanny/createNanny/createNanny";
 import Modal from "../../shared/modal/Modal";
+import AppointmentList from "../../components/appointment/AppointmentList";
 
 const ProfilePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,6 +27,8 @@ const ProfilePage = () => {
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <CreateNannyProfile isOpen={isModalOpen} onClose={handleCloseModal} />
       </Modal>
+
+      <AppointmentList />
     </div>
   );
 };
