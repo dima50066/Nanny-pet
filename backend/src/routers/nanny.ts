@@ -15,12 +15,14 @@ import {
 import { validateBody } from "../middlewares/validateBody";
 import { nannySchema, updateNannySchema } from "../validation/nanny";
 import { authenticate } from "../middlewares/authenticate";
+import { upload } from "../middlewares/multer";
 
 const router = Router();
 
 router.post(
   "/",
   authenticate,
+  upload.single("avatar"),
   validateBody(nannySchema),
   ctrlWrapper(createNannyController)
 );
@@ -32,6 +34,7 @@ router.get("/me", authenticate, ctrlWrapper(getMyNannyController));
 router.patch(
   "/",
   authenticate,
+  upload.single("avatar"),
   validateBody(updateNannySchema),
   ctrlWrapper(updateNannyController)
 );

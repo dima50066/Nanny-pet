@@ -60,7 +60,7 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
       <div className="flex-shrink-0 mr-6">
         <div className="relative w-[96px] h-[96px] rounded-[15px] border-[2px] border-[#f03f3b33] p-[12px]">
           <img
-            src={nanny.avatar_url}
+            src={nanny.avatar}
             alt={nanny.name}
             className="w-full h-full bg-[#e0e0e0] rounded-[15px] object-cover"
           />
@@ -95,6 +95,41 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
 
         <div className="pb-[24px]">
           <h2 className="nannies-name">{nanny.name}</h2>
+        </div>
+        <div className="flex gap-2 flex-wrap pb-[24px]">
+          <div className="nannies-panels">
+            <p className="nannies-panels-title">Age:</p>
+            <p className="nannies-panels-text underline">
+              {new Date().getFullYear() -
+                new Date(nanny.birthday).getFullYear() -
+                (new Date().getMonth() < new Date(nanny.birthday).getMonth() ||
+                (new Date().getMonth() ===
+                  new Date(nanny.birthday).getMonth() &&
+                  new Date().getDate() < new Date(nanny.birthday).getDate())
+                  ? 1
+                  : 0)}
+            </p>
+          </div>
+          <div className="nannies-panels">
+            <p className="nannies-panels-title">Experience:</p>
+            <p className="nannies-panels-text">{nanny.experience}</p>
+          </div>
+          <div className="nannies-panels">
+            <p className="nannies-panels-title">Kids age:</p>
+            <p className="nannies-panels-text">{nanny.kids_age} years old</p>
+          </div>
+          <div className="nannies-panels">
+            <p className="nannies-panels-title">Characters:</p>
+            <p className="nannies-panels-text">
+              {Array.isArray(nanny.characters)
+                ? nanny.characters.join(", ")
+                : nanny.characters}
+            </p>{" "}
+          </div>
+          <div className="nannies-panels ">
+            <p className="nannies-panels-title">Education:</p>
+            <p className="nannies-panels-text">{nanny.education}</p>
+          </div>
         </div>
         <div>
           <p className="text-sm text-gray-600 mb-4">
@@ -151,7 +186,7 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
       >
         <AppointmentForm
           nannyName={nanny.name}
-          nannyAvatar={nanny.avatar_url}
+          nannyAvatar={nanny.avatar}
           nannyId={nanny._id}
           onCloseModal={handleCloseModal}
         />

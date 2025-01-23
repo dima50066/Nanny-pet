@@ -10,7 +10,9 @@ import PrivateRoute from "./components/routers/PrivateRoute";
 import { AppDispatch } from "./redux/store";
 import { ToastContainer } from "react-toastify";
 import RequestResetPage from "./pages/password/RequestResetPage";
-import ResetPasswordPage from "./pages/password/ResetPasswordPage";
+import ResetPasswordPage from "./pages/password/RequestResetPage";
+import ProfilePage from "./pages/profile/Profile";
+
 const App = () => {
   const dispatch = useDispatch<AppDispatch>();
   const isLoading = useSelector(selectIsLoading);
@@ -36,6 +38,12 @@ const App = () => {
             path="/favorites"
             element={
               <PrivateRoute component={<FavoritesPage />} redirectTo="/" />
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute component={<ProfilePage />} redirectTo="/" />
             }
           />
           <Route path="/request-reset" element={<RequestResetPage />} />

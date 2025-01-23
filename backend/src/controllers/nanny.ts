@@ -11,6 +11,7 @@ import {
 import { UsersCollection } from "../db/models/user";
 import { NanniesCollection } from "../db/models/nanny";
 import createHttpError from "http-errors";
+import { saveFileToCloudinary } from "../utils/cloudinary";
 
 export const createNannyController = async (
   req: AuthenticatedRequest,
@@ -23,7 +24,7 @@ export const createNannyController = async (
       throw new Error("User not authenticated");
     }
 
-    const nanny = await createNannyProfile({ ...req.body, userId });
+    const nanny = await createNannyProfile({ ...req.body, userId }, req.file);
     res.status(201).json({
       status: 201,
       message: "Nanny profile created successfully!",
@@ -67,8 +68,11 @@ export const updateNannyController = async (
       throw new Error("User not authenticated");
     }
 
-    const updates = req.body;
-    const nanny = await updateNannyProfile(userId.toString(), updates);
+    const nanny = await updateNannyProfile(
+      userId.toString(),
+      req.body,
+      req.file
+    );
     res.json({
       status: 200,
       message: "Nanny profile updated successfully!",

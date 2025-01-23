@@ -11,6 +11,7 @@ import {
   fetchMyNannyProfile,
   fetchNannyById,
   fetchFilteredFavorites,
+  createNannyProfile,
 } from "./operations";
 
 interface NannyState {
@@ -106,14 +107,33 @@ const nanniesSlice = createSlice({
       .addCase(fetchMyNannyProfile.fulfilled, (state, action) => {
         state.myNannyProfile = action.payload;
       })
-      .addCase(updateNannyProfile.fulfilled, (state, action) => {
-        state.myNannyProfile = action.payload;
-      })
       .addCase(fetchNannyById.fulfilled, (state, action) => {
         state.currentNanny = action.payload;
       })
       .addCase(fetchNannyById.rejected, (state, action) => {
         state.error = action.payload || "Failed to fetch nanny by ID";
+      })
+      .addCase(createNannyProfile.pending, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(createNannyProfile.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(createNannyProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to create nanny profile";
+      })
+      .addCase(updateNannyProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateNannyProfile.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(updateNannyProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to update nanny profile";
       });
   },
 });

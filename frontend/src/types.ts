@@ -37,7 +37,7 @@ export interface Nanny {
   _id: string;
   userId: string;
   name: string;
-  avatar_url: string;
+  avatar: string;
   birthday: string;
   experience: string;
   education: string;
@@ -45,7 +45,7 @@ export interface Nanny {
   price_per_hour: number;
   location: string;
   about: string;
-  characters: string[];
+  characters: string[] | string;
   rating: number;
   reviews: Review[];
 

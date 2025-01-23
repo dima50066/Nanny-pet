@@ -2,8 +2,12 @@ import { NanniesCollection } from "../db/models/nanny";
 import { Nanny } from "../db/models/nanny";
 import createHttpError from "http-errors";
 import { UsersCollection } from "../db/models/user";
+import { saveFileToCloudinary } from "../utils/cloudinary";
 
-export const createNannyProfile = async (payload: Nanny) => {
+export const createNannyProfile = async (
+  payload: Nanny,
+  file?: Express.Multer.File
+) => {
   const existingNanny = await NanniesCollection.findOne({
     userId: payload.userId,
   });
@@ -11,24 +15,63 @@ export const createNannyProfile = async (payload: Nanny) => {
     throw createHttpError(400, "User already has a nanny profile");
   }
 
+  if (file) {
+    const uploadResult = await saveFileToCloudinary(file.path, {
+      resource_type: "image",
+    });
+    payload.avatar = uploadResult.secure_url;
+  }
+
+  if (typeof payload.characters === "string") {
+    payload.characters = payload.characters
+      .replace(/[^a-zA-Z\s]/g, " ")
+      .split(" ")
+      .map((char: string) => char.trim())
+      .filter((char: string) => char.length > 0)
+      .map(
+        (char: string) =>
+          char.charAt(0).toUpperCase() + char.slice(1).toLowerCase()
+      );
+  }
+
   return await NanniesCollection.create(payload);
 };
 
-export const getNannyProfileByUserId = async (userId: string) => {
-  const nanny = await NanniesCollection.findOne({ userId });
+export const updateNannyProfile = async (
+  userId: string,
+  updates: Partial<Nanny>,
+  file?: Express.Multer.File
+) => {
+  if (file) {
+    const uploadResult = await saveFileToCloudinary(file.path, {
+      resource_type: "image",
+    });
+    updates.avatar = uploadResult.secure_url;
+  }
+
+  if (updates.characters && typeof updates.characters === "string") {
+    updates.characters = updates.characters
+      .replace(/[^a-zA-Z\s]/g, " ")
+      .split(" ")
+      .map((char: string) => char.trim())
+      .filter((char: string) => char.length > 0)
+      .map(
+        (char: string) =>
+          char.charAt(0).toUpperCase() + char.slice(1).toLowerCase()
+      );
+  }
+
+  const nanny = await NanniesCollection.findOneAndUpdate({ userId }, updates, {
+    new: true,
+  });
   if (!nanny) {
     throw createHttpError(404, "Nanny profile not found");
   }
   return nanny;
 };
 
-export const updateNannyProfile = async (
-  userId: string,
-  updates: Partial<Nanny>
-) => {
-  const nanny = await NanniesCollection.findOneAndUpdate({ userId }, updates, {
-    new: true,
-  });
+export const getNannyProfileByUserId = async (userId: string) => {
+  const nanny = await NanniesCollection.findOne({ userId });
   if (!nanny) {
     throw createHttpError(404, "Nanny profile not found");
   }

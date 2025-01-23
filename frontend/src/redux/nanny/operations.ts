@@ -81,19 +81,6 @@ export const removeFromFavorites = createAsyncThunk<
   }
 });
 
-export const updateNannyProfile = createAsyncThunk<
-  Nanny,
-  Partial<Nanny>,
-  { rejectValue: string }
->("nannies/updateNannyProfile", async (updates, { rejectWithValue }) => {
-  try {
-    const response = await axiosInstance.patch("/nanny", updates);
-    return response.data.data;
-  } catch {
-    return rejectWithValue("Failed to update nanny profile");
-  }
-});
-
 export const fetchMyNannyProfile = createAsyncThunk<
   Nanny,
   void,
@@ -132,3 +119,47 @@ export const fetchFilteredFavorites = createAsyncThunk<
     }
   }
 );
+
+export const createNannyProfile = createAsyncThunk<
+  Nanny,
+  { data: Partial<Nanny>; file?: File },
+  { rejectValue: string }
+>("nannies/createNannyProfile", async ({ data, file }, { rejectWithValue }) => {
+  try {
+    const formData = new FormData();
+    Object.keys(data).forEach((key) => {
+      const value = data[key as keyof Nanny];
+      if (value !== undefined) formData.append(key, value as string | Blob);
+    });
+    if (file) formData.append("avatar", file);
+
+    const response = await axiosInstance.post(`/nanny`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data.data;
+  } catch {
+    return rejectWithValue("Failed to create nanny profile");
+  }
+});
+
+export const updateNannyProfile = createAsyncThunk<
+  Nanny,
+  { data: Partial<Nanny>; file?: File },
+  { rejectValue: string }
+>("nannies/updateNannyProfile", async ({ data, file }, { rejectWithValue }) => {
+  try {
+    const formData = new FormData();
+    Object.keys(data).forEach((key) => {
+      const value = data[key as keyof Nanny];
+      if (value !== undefined) formData.append(key, value as string | Blob);
+    });
+    if (file) formData.append("avatar", file);
+
+    const response = await axiosInstance.patch(`/nanny`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data.data;
+  } catch {
+    return rejectWithValue("Failed to update nanny profile");
+  }
+});

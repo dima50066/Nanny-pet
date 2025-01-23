@@ -3,7 +3,7 @@ import mongoose, { Document, Schema, Types } from "mongoose";
 export interface Nanny extends Document {
   userId: Types.ObjectId;
   name: string;
-  avatar_url: string;
+  avatar: string;
   birthday: Date;
   experience: string;
   reviews: {
@@ -16,7 +16,7 @@ export interface Nanny extends Document {
   price_per_hour: number;
   location: string;
   about: string;
-  characters: string[];
+  characters: string[] | string;
   rating: number;
 }
 
@@ -24,7 +24,7 @@ const NannySchema: Schema = new Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: "users", required: true },
     name: { type: String, required: true },
-    avatar_url: { type: String, required: true },
+    avatar: { type: String, required: true },
     birthday: { type: Date, required: true },
     experience: { type: String, required: true },
     reviews: [
