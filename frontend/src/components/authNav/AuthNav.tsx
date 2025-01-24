@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../../redux/auth/operations";
 import Modal from "../../shared/modal/Modal";
 import LoginModal from "../modals/Login";
@@ -10,6 +11,7 @@ import { AppDispatch, RootState } from "../../redux/store";
 
 const AuthNav: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const isAuthenticated = useSelector((state: RootState) =>
     selectIsLoggedIn(state)
   );
@@ -25,6 +27,10 @@ const AuthNav: React.FC = () => {
 
   const handleLogout = () => {
     dispatch(logoutUser());
+  };
+
+  const handleProfileClick = () => {
+    navigate("/profile");
   };
 
   const getShortUserName = (name?: string): string => {
@@ -46,7 +52,10 @@ const AuthNav: React.FC = () => {
       ) : (
         <div className="flex items-center gap-[8px]">
           <div className="flex items-center gap-2">
-            <span className="bg-white p-1.5 rounded-lg flex items-center justify-center">
+            <span
+              onClick={handleProfileClick}
+              className="bg-white p-1.5 rounded-lg flex items-center justify-center cursor-pointer "
+            >
               <Icon id="user" className="w-9 h-9" />
             </span>
             <p className="text-white text-lg font-medium">

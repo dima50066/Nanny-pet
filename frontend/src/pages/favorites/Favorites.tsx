@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchFilteredFavorites } from "../../redux/nanny/operations";
 import {
@@ -9,11 +9,9 @@ import {
 } from "../../redux/nanny/selectors";
 import { selectFilters } from "../../redux/filter/selectors";
 import Filters from "../../components/filters/Filters";
-import Header from "../../components/header/Header";
-import NanniesList from "../../components/nanny/nanniesList/NanniesList";
+import NanniesList from "../../components/nanny/NanniesList";
 import { AppDispatch } from "../../redux/store";
-import Loader from "../../shared/loader/Loader";
-import { ToastContainer } from "react-toastify";
+import PageLayout from "../../components/layout/PageLayout";
 
 const FavoritesPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -22,20 +20,6 @@ const FavoritesPage: React.FC = () => {
   const filters = useSelector(selectFilters);
   const currentPage = useSelector(selectFavoritesCurrentPage);
   const totalPages = useSelector(selectFavoritesTotalPages);
-
-  const [showLoader, setShowLoader] = useState(false);
-
-  useEffect(() => {
-    if (loading) {
-      setShowLoader(true);
-    } else {
-      const timeout = setTimeout(() => {
-        setShowLoader(false);
-      }, 2000);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [loading]);
 
   useEffect(() => {
     dispatch(fetchFilteredFavorites({ page: currentPage, filters }));
@@ -61,32 +45,17 @@ const FavoritesPage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto py-8 w-full max-w-[1440px]">
-      <div className="bg-main max-w-[1440px]">
-        <Header />
-      </div>
-      <div className="container bg-[#F3F3F3] w-full">
-        <ToastContainer />
-        <Filters onFilterChange={handleFilterChange} />
-        {showLoader ? (
-          <div className="flex justify-center py-16">
-            <Loader />
-          </div>
-        ) : (
-          <NanniesList nannies={filteredFavorites} />
-        )}
-        {!loading && !showLoader && currentPage < totalPages && (
-          <div className="flex justify-center py-16">
-            <button
-              className="nannies-loadMore bg-main"
-              onClick={handleLoadMore}
-            >
-              Load More
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
+    <PageLayout showLoader={loading}>
+      <Filters onFilterChange={handleFilterChange} />
+      <NanniesList nannies={filteredFavorites} />
+      {!loading && currentPage < totalPages && (
+        <div className="flex justify-center py-16">
+          <button className="nannies-loadMore bg-main" onClick={handleLoadMore}>
+            Load More
+          </button>
+        </div>
+      )}
+    </PageLayout>
   );
 };
 

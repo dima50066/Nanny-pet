@@ -1,16 +1,16 @@
 import React, { useState, useMemo } from "react";
-import { Nanny as NannyType } from "../../../types";
-import Icon from "../../../shared/icon/Icon";
+import { Nanny as NannyType } from "../..//types";
+import Icon from "../..//shared/icon/Icon";
 import {
   addToFavorites,
   removeFromFavorites,
-} from "../../../redux/nanny/operations";
-import { selectFavorites } from "../../../redux/nanny/selectors";
-import { selectIsLoggedIn } from "../../../redux/auth/selectors";
+} from "../..//redux/nanny/operations";
+import { selectFavorites } from "../../redux/nanny/selectors";
+import { selectIsLoggedIn } from "../../redux/auth/selectors";
 import { useSelector, useDispatch } from "react-redux";
-import { AppDispatch } from "../../../redux/store";
-import Modal from "../../../shared/modal/Modal";
-import AppointmentForm from "../../appointment/CreateAppointment";
+import { AppDispatch } from "../../redux/store";
+import Modal from "../../shared/modal/Modal";
+import AppointmentForm from "../appointment/CreateAppointment";
 import { toast } from "react-toastify";
 
 interface NannyProps {

@@ -37,7 +37,9 @@ const AppointmentList: React.FC = () => {
 
   useEffect(() => {
     if (error) {
-      toast.error(error);
+      toast.error(
+        "Failed to fetch appointments. Please try again later. Error: " + error
+      );
     }
   }, [error]);
 

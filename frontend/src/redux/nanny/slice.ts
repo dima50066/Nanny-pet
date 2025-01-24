@@ -12,6 +12,8 @@ import {
   fetchNannyById,
   fetchFilteredFavorites,
   createNannyProfile,
+  fetchTotalNanniesCount,
+  deleteNannyProfile,
 } from "./operations";
 
 interface NannyState {
@@ -26,6 +28,7 @@ interface NannyState {
   totalPages: number;
   favoritesCurrentPage: number;
   favoritesTotalPages: number;
+  totalNanniesCount: number;
 }
 
 const initialState: NannyState = {
@@ -40,6 +43,7 @@ const initialState: NannyState = {
   totalPages: 1,
   favoritesCurrentPage: 1,
   favoritesTotalPages: 1,
+  totalNanniesCount: 0,
 };
 
 const nanniesSlice = createSlice({
@@ -117,8 +121,9 @@ const nanniesSlice = createSlice({
         state.loading = false;
         state.error = null;
       })
-      .addCase(createNannyProfile.fulfilled, (state) => {
+      .addCase(createNannyProfile.fulfilled, (state, action) => {
         state.loading = false;
+        state.myNannyProfile = action.payload;
       })
       .addCase(createNannyProfile.rejected, (state, action) => {
         state.loading = false;
@@ -134,6 +139,30 @@ const nanniesSlice = createSlice({
       .addCase(updateNannyProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to update nanny profile";
+      })
+      .addCase(fetchTotalNanniesCount.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchTotalNanniesCount.fulfilled, (state, action) => {
+        state.loading = false;
+        state.totalNanniesCount = action.payload;
+      })
+      .addCase(fetchTotalNanniesCount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch total nannies count";
+      })
+      .addCase(deleteNannyProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteNannyProfile.fulfilled, (state) => {
+        state.loading = false;
+        state.myNannyProfile = null;
+      })
+      .addCase(deleteNannyProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to delete nanny profile";
       });
   },
 });

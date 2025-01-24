@@ -1,6 +1,6 @@
 import React from "react";
-import Nanny from "../nannyInfo/NannyInfo";
-import { Nanny as NannyType } from "../../../types";
+import Nanny from "./NannyInfo";
+import { Nanny as NannyType } from "../../types";
 
 interface NanniesListProps {
   nannies: NannyType[];

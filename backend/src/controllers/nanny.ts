@@ -7,6 +7,7 @@ import {
   deleteNannyProfile,
   getFilteredNannies,
   getFilteredFavorites,
+  getTotalNanniesCount,
 } from "../services/nanny";
 import { UsersCollection } from "../db/models/user";
 import { NanniesCollection } from "../db/models/nanny";
@@ -258,6 +259,23 @@ export const getFilteredFavoritesController = async (
         totalPages: Math.ceil(totalCount / 3),
         currentPage: Number(req.query.page || 1),
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getTotalNanniesCountController = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const totalCount = await getTotalNanniesCount();
+    res.json({
+      status: 200,
+      message: "Total nannies count fetched successfully!",
+      data: { totalCount },
     });
   } catch (error) {
     next(error);

@@ -167,3 +167,7 @@ export const getFilteredFavorites = async (userId: string, query: any) => {
 
   return { favorites: paginatedFavorites, totalCount };
 };
+
+export const getTotalNanniesCount = async (): Promise<number> => {
+  return await NanniesCollection.countDocuments({});
+};

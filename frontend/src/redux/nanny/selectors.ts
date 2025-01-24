@@ -14,3 +14,5 @@ export const selectFavoritesCurrentPage = (state: RootState) =>
   state.nannies.favoritesCurrentPage;
 export const selectFavoritesTotalPages = (state: RootState) =>
   state.nannies.favoritesTotalPages;
+export const selectTotalNanniesCount = (state: RootState) =>
+  state.nannies.totalNanniesCount;

@@ -12,6 +12,7 @@ import { ToastContainer } from "react-toastify";
 import RequestResetPage from "./pages/password/RequestResetPage";
 import ResetPasswordPage from "./pages/password/RequestResetPage";
 import ProfilePage from "./pages/profile/Profile";
+import { fetchMyNannyProfile } from "./redux/nanny/operations";
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,6 +22,7 @@ const App = () => {
   useEffect(() => {
     if (token) {
       dispatch(refreshSession());
+      dispatch(fetchMyNannyProfile());
     }
   }, [dispatch]);
 

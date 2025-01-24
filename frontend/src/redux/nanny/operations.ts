@@ -163,3 +163,28 @@ export const updateNannyProfile = createAsyncThunk<
     return rejectWithValue("Failed to update nanny profile");
   }
 });
+
+export const fetchTotalNanniesCount = createAsyncThunk<
+  number,
+  void,
+  { rejectValue: string }
+>("nannies/fetchTotalNanniesCount", async (_, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.get("/nanny/count/total");
+    return response.data.data.totalCount;
+  } catch {
+    return rejectWithValue("Failed to fetch total nannies count");
+  }
+});
+
+export const deleteNannyProfile = createAsyncThunk<
+  void,
+  void,
+  { rejectValue: string }
+>("nannies/deleteNannyProfile", async (_, { rejectWithValue }) => {
+  try {
+    await axiosInstance.delete("/nanny");
+  } catch {
+    return rejectWithValue("Failed to delete nanny profile");
+  }
+});

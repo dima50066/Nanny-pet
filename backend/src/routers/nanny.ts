@@ -11,6 +11,7 @@ import {
   getFavoritesController,
   getNannyByIdController,
   getFilteredFavoritesController,
+  getTotalNanniesCountController,
 } from "../controllers/nanny";
 import { validateBody } from "../middlewares/validateBody";
 import { nannySchema, updateNannySchema } from "../validation/nanny";
@@ -55,4 +56,5 @@ router.get("/:id", authenticate, ctrlWrapper(getNannyByIdController));
 
 router.get("/favorites/filter", authenticate, getFilteredFavoritesController);
 
+router.get("/count/total", ctrlWrapper(getTotalNanniesCountController));
 export default router;
