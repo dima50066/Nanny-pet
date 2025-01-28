@@ -24,7 +24,12 @@ const NannySchema: Schema = new Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: "users", required: true },
     name: { type: String, required: true },
-    avatar: { type: String, required: true },
+    avatar: {
+      type: String,
+      required: true,
+      default:
+        "https://res.cloudinary.com/divyszzpf/image/upload/v1738067029/NannyProject/wzlwgo5ldvnylylapzlx.webp",
+    },
     birthday: { type: Date, required: true },
     experience: { type: String, required: true },
     reviews: [
