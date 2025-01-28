@@ -151,11 +151,11 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
                 <div key={index} className="p-4 rounded-md">
                   <div className="flex mb-[16px]">
                     <div className="w-[44px] h-[44px] bg-gray-200 text-black text-center rounded-full flex items-center justify-center">
-                      {review.reviewer.charAt(0)}
+                      {review.author.charAt(0)}
                     </div>
                     <div className="ml-2 flex flex-col">
                       <p className="nannies-reviewer-name pb-[4px]">
-                        {review.reviewer}
+                        {review.author}
                       </p>
                       <div className="flex flex-row">
                         <Icon

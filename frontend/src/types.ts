@@ -54,7 +54,7 @@ export interface Nanny {
 }
 
 export interface Review {
-  reviewer: string;
+  author: string;
   rating: number;
   comment: string;
 }
