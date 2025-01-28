@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAppointments } from "../../redux/appointment/operations";
 import {
   selectAppointments,
-  selectIsLoading,
   selectError,
+  selectIsLoading,
 } from "../../redux/appointment/selectors";
 import { AppDispatch } from "../../redux/store";
 import AppointmentInfo from "./AppointmentInfo";
@@ -14,26 +14,12 @@ import Loader from "../../shared/loader/Loader";
 const AppointmentList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const appointments = useSelector(selectAppointments);
-  const isLoading = useSelector(selectIsLoading);
   const error = useSelector(selectError);
-
-  const [showLoader, setShowLoader] = useState(false);
+  const isLoading = useSelector(selectIsLoading);
 
   useEffect(() => {
     dispatch(fetchAppointments());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (isLoading) {
-      setShowLoader(true);
-    } else {
-      const timeout = setTimeout(() => {
-        setShowLoader(false);
-      }, 1000);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [isLoading]);
 
   useEffect(() => {
     if (error) {
@@ -47,7 +33,7 @@ const AppointmentList: React.FC = () => {
     <div className="p-6">
       <h2 className="text-xl font-bold mb-4">Your Appointments</h2>
 
-      {showLoader ? (
+      {isLoading ? (
         <div className="flex justify-center py-16">
           <Loader />
         </div>

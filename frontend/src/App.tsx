@@ -13,6 +13,7 @@ import RequestResetPage from "./pages/password/RequestResetPage";
 import ResetPasswordPage from "./pages/password/RequestResetPage";
 import ProfilePage from "./pages/profile/Profile";
 import { fetchMyNannyProfile } from "./redux/nanny/operations";
+import Loader from "./shared/loader/Loader";
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -27,7 +28,7 @@ const App = () => {
   }, [dispatch]);
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <Loader />;
   }
 
   return (

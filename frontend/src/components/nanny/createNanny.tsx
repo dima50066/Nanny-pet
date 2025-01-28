@@ -222,7 +222,7 @@ const CreateNannyProfile: React.FC<CreateNannyProfileProps> = ({ onClose }) => {
               name="about"
               value={formData.about}
               onChange={handleChange}
-              className="w-full border border-gray-300 p-2 rounded"
+              className="w-full border border-gray-300 p-2 rounded resize-none "
               required
               placeholder="Tell us about yourself"
             ></textarea>

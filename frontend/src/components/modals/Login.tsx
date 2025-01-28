@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "react-toastify";
+import { fetchMyNannyProfile } from "../../redux/nanny/operations";
 
 const schema = yup.object().shape({
   email: yup
@@ -42,6 +43,8 @@ const LogInModal = () => {
   const onSubmit = async (data: { email: string; password: string }) => {
     try {
       await dispatch(loginUser(data)).unwrap();
+      dispatch(fetchMyNannyProfile());
+
       toast.success("Login successful!");
     } catch (error) {
       toast.error("Login failed! Please check your credentials.");

@@ -108,9 +108,17 @@ const nanniesSlice = createSlice({
       .addCase(removeFromFavorites.fulfilled, (state, action) => {
         state.favorites = action.payload;
       })
+      .addCase(fetchNannyById.pending, (state) => {
+        state.error = null;
+      })
       .addCase(fetchMyNannyProfile.fulfilled, (state, action) => {
         state.myNannyProfile = action.payload;
       })
+      .addCase(fetchMyNannyProfile.rejected, (state, action) => {
+        state.error = action.payload || "Failed to fetch nanny profile";
+        state.myNannyProfile = null;
+      })
+
       .addCase(fetchNannyById.fulfilled, (state, action) => {
         state.currentNanny = action.payload;
       })
