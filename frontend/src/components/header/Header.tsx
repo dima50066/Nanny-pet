@@ -7,7 +7,9 @@ const Header = () => {
   const location = useLocation();
 
   const isCentered =
-    location.pathname === "/nannies" || location.pathname === "/favorites";
+    location.pathname === "/nannies" ||
+    location.pathname === "/favorites" ||
+    location.pathname === "/profile";
 
   return (
     <header
