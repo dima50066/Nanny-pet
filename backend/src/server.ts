@@ -33,7 +33,7 @@ export const setupServer = () => {
   const corsOptions = {
     origin:
       process.env.NODE_ENV === "production"
-        ? "https://nanny-pet.vercel.app/"
+        ? "https://nanny-pet.vercel.app"
         : "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Authorization", "Content-Type"],
