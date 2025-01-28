@@ -45,9 +45,9 @@ const FavoritesPage: React.FC = () => {
   };
 
   return (
-    <PageLayout showLoader={loading}>
+    <PageLayout>
       <Filters onFilterChange={handleFilterChange} />
-      <NanniesList nannies={filteredFavorites} />
+      <NanniesList isLoading={loading} nannies={filteredFavorites} />
       {!loading && currentPage < totalPages && (
         <div className="flex justify-center py-16">
           <button className="nannies-loadMore bg-main" onClick={handleLoadMore}>
