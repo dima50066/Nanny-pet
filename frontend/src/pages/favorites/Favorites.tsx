@@ -12,6 +12,8 @@ import Filters from "../../components/filters/Filters";
 import NanniesList from "../../components/nanny/NanniesList";
 import { AppDispatch } from "../../redux/store";
 import PageLayout from "../../components/layout/PageLayout";
+import NoResults from "../../components/nanny/NoResults";
+import { toast } from "react-toastify";
 
 const FavoritesPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -44,10 +46,23 @@ const FavoritesPage: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (!loading && filteredFavorites.length === 0) {
+      toast.info("No nannies found for the selected filters.", {
+        position: "top-center",
+      });
+    }
+  }, [loading, filteredFavorites.length]);
+
   return (
     <PageLayout>
       <Filters onFilterChange={handleFilterChange} />
       <NanniesList isLoading={loading} nannies={filteredFavorites} />
+
+      {!loading && filteredFavorites.length === 0 && (
+        <NoResults onResetFilters={() => handleFilterChange({})} />
+      )}
+
       {!loading && currentPage < totalPages && (
         <div className="flex justify-center py-16">
           <button className="nannies-loadMore bg-main" onClick={handleLoadMore}>
