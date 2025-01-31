@@ -17,6 +17,7 @@ import NanniesList from "../../components/nanny/NanniesList";
 import { AppDispatch } from "../../redux/store";
 import { toast } from "react-toastify";
 import PageLayout from "../../components/layout/PageLayout";
+import NoResults from "../../components/nanny/NoResults";
 
 const Nannies: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -71,6 +72,10 @@ const Nannies: React.FC = () => {
       <Filters onFilterChange={handleFilterChange} />
 
       <NanniesList isLoading={loading} nannies={nannies} />
+
+      {!loading && nannies.length === 0 && (
+        <NoResults onResetFilters={() => handleFilterChange({})} />
+      )}
 
       {!loading && hasMoreItems && (
         <div className="flex justify-center py-16">

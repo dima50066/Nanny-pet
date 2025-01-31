@@ -8,6 +8,7 @@ import RegisterModal from "../modals/Register";
 import Icon from "../../shared/icon/Icon";
 import { selectIsLoggedIn, selectUser } from "../../redux/auth/selectors";
 import { AppDispatch, RootState } from "../../redux/store";
+import { selectMyNannyProfile } from "../../redux/nanny/selectors";
 
 const AuthNav: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -19,6 +20,9 @@ const AuthNav: React.FC = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] =
     useState<boolean>(false);
+  const myNannyProfile = useSelector((state: RootState) =>
+    selectMyNannyProfile(state)
+  );
 
   const openLoginModal = () => setIsLoginModalOpen(true);
   const openRegisterModal = () => setIsRegisterModalOpen(true);
@@ -54,9 +58,17 @@ const AuthNav: React.FC = () => {
           <div className="flex items-center gap-2">
             <span
               onClick={handleProfileClick}
-              className="bg-white p-1.5 rounded-lg flex items-center justify-center cursor-pointer "
+              className=" p-1.5 rounded-lg flex items-center justify-center cursor-pointer"
             >
-              <Icon id="user" className="w-9 h-9" />
+              {myNannyProfile?.avatar ? (
+                <img
+                  src={myNannyProfile.avatar}
+                  alt={myNannyProfile.name}
+                  className="w-[50px] h-[50px] rounded-full object-cover"
+                />
+              ) : (
+                <Icon id="user" className="w-9 h-9 text-gray-500" />
+              )}
             </span>
             <p className="text-white text-lg font-medium">
               {getShortUserName(user?.name)}

@@ -28,7 +28,7 @@ const Header = () => {
           <Navigation />
         </div>
       ) : (
-        <div className="pl-[100px] flex flex-row gap-7 justify-between items-center w-[590px]">
+        <div className="pl-[25px] flex flex-row gap-7 justify-between items-center w-[590px]">
           <Navigation />
           <AuthNav />
         </div>
