@@ -20,14 +20,11 @@ const filterSlice = createSlice({
   initialState,
   reducers: {
     setFilters(state, action: PayloadAction<Partial<FilterState["filters"]>>) {
-      state.filters = action.payload as FilterState["filters"];
+      state.filters = { ...state.filters, ...action.payload };
       state.page = 1;
-    },
-    setPage(state, action: PayloadAction<number>) {
-      state.page = action.payload;
     },
   },
 });
 
-export const { setFilters, setPage } = filterSlice.actions;
+export const { setFilters } = filterSlice.actions;
 export default filterSlice.reducer;

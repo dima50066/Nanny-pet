@@ -12,12 +12,15 @@ import {
   selectTotalPages,
 } from "../../redux/nanny/selectors";
 import { selectFilters } from "../../redux/filter/selectors";
+import { setPage } from "../../redux/nanny/slice";
 import Filters from "../../components/filters/Filters";
 import NanniesList from "../../components/nanny/NanniesList";
 import { AppDispatch } from "../../redux/store";
 import { toast } from "react-toastify";
 import PageLayout from "../../components/layout/PageLayout";
 import NoResults from "../../components/nanny/NoResults";
+import { resetNannies } from "../../redux/nanny/slice";
+import Loader from "../../shared/loader/Loader";
 
 const Nannies: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -32,11 +35,8 @@ const Nannies: React.FC = () => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   useEffect(() => {
-    if (!isLoadingMore) {
-      dispatch(fetchFilteredNannies({ page: currentPage, filters }));
-    }
-    setIsLoadingMore(false);
-  }, [dispatch, currentPage, filters]);
+    dispatch(fetchFilteredNannies({ page: currentPage, filters }));
+  }, [dispatch, filters, currentPage]);
 
   useEffect(() => {
     if (favorites.length === 0) {
@@ -53,15 +53,21 @@ const Nannies: React.FC = () => {
   }, [loading, nannies.length]);
 
   const handleFilterChange = (newFilters: Partial<typeof filters>) => {
+    dispatch(resetNannies());
+    dispatch(setPage(1));
     dispatch(
       fetchFilteredNannies({ page: 1, filters: { ...filters, ...newFilters } })
     );
   };
 
-  const handleLoadMore = () => {
-    if (currentPage < totalPages && !isLoadingMore) {
+  const handleLoadMore = async () => {
+    if (currentPage < totalPages) {
       setIsLoadingMore(true);
-      dispatch(fetchFilteredNannies({ page: currentPage + 1, filters }));
+
+      setTimeout(() => {
+        setIsLoadingMore(false);
+        dispatch(setPage(currentPage + 1));
+      }, 2000);
     }
   };
 
@@ -71,7 +77,10 @@ const Nannies: React.FC = () => {
     <PageLayout>
       <Filters onFilterChange={handleFilterChange} />
 
-      <NanniesList isLoading={loading} nannies={nannies} />
+      <NanniesList
+        isLoading={loading && nannies.length === 0}
+        nannies={nannies}
+      />
 
       {!loading && nannies.length === 0 && (
         <NoResults onResetFilters={() => handleFilterChange({})} />
@@ -79,9 +88,16 @@ const Nannies: React.FC = () => {
 
       {!loading && hasMoreItems && (
         <div className="flex justify-center py-16">
-          <button className="nannies-loadMore bg-main" onClick={handleLoadMore}>
-            Load more
-          </button>
+          {isLoadingMore ? (
+            <Loader />
+          ) : (
+            <button
+              className="nannies-loadMore bg-main"
+              onClick={handleLoadMore}
+            >
+              Load more
+            </button>
+          )}
         </div>
       )}
     </PageLayout>

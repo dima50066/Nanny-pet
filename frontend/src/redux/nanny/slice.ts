@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { Nanny } from "../../types";
@@ -49,7 +49,21 @@ const initialState: NannyState = {
 const nanniesSlice = createSlice({
   name: "nannies",
   initialState,
-  reducers: {},
+  reducers: {
+    resetNannies: (state) => {
+      state.items = [];
+      state.currentPage = 1;
+      state.totalPages = 1;
+    },
+    setPage(state, action: PayloadAction<number>) {
+      console.log("Redux setPage called, new page:", action.payload);
+      state.currentPage = action.payload;
+    },
+    setFavoritesPage(state, action: PayloadAction<number>) {
+      console.log("Redux setPage called, new page:", action.payload);
+      state.favoritesCurrentPage = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchFilteredNannies.pending, (state) => {
@@ -58,11 +72,17 @@ const nanniesSlice = createSlice({
       })
       .addCase(fetchFilteredNannies.fulfilled, (state, action) => {
         state.loading = false;
+
         if (action.meta.arg.page === 1) {
           state.items = action.payload.nannies;
         } else {
-          state.items = [...state.items, ...action.payload.nannies];
+          const newItems = action.payload.nannies.filter(
+            (nanny) =>
+              !state.items.some((existing) => existing._id === nanny._id)
+          );
+          state.items = [...state.items, ...newItems];
         }
+
         state.currentPage = action.payload.currentPage;
         state.totalPages = action.payload.totalPages;
       })
@@ -181,4 +201,5 @@ const persistConfig = {
   whitelist: ["favorites", "items"],
 };
 
+export const { resetNannies, setPage, setFavoritesPage } = nanniesSlice.actions;
 export default persistReducer(persistConfig, nanniesSlice.reducer);
