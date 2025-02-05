@@ -29,8 +29,10 @@ const App = () => {
 
   useEffect(() => {
     if (token) {
-      dispatch(refreshSession());
-      dispatch(fetchMyNannyProfile());
+      dispatch(refreshSession())
+        .unwrap()
+        .then(() => dispatch(fetchMyNannyProfile()))
+        .catch((error) => console.error("Session refresh failed:", error));
     }
   }, [dispatch]);
 

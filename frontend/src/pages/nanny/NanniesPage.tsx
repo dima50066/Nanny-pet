@@ -12,14 +12,13 @@ import {
   selectTotalPages,
 } from "../../redux/nanny/selectors";
 import { selectFilters } from "../../redux/filter/selectors";
-import { setPage } from "../../redux/nanny/slice";
+import { setPage, resetNannies } from "../../redux/nanny/slice";
 import Filters from "../../components/filters/Filters";
 import NanniesList from "../../components/nanny/NanniesList";
 import { AppDispatch } from "../../redux/store";
 import { toast } from "react-toastify";
 import PageLayout from "../../components/layout/PageLayout";
 import NoResults from "../../components/nanny/NoResults";
-import { resetNannies } from "../../redux/nanny/slice";
 import Loader from "../../shared/loader/Loader";
 
 const Nannies: React.FC = () => {
@@ -33,9 +32,21 @@ const Nannies: React.FC = () => {
   const filters = useSelector(selectFilters);
 
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   useEffect(() => {
-    dispatch(fetchFilteredNannies({ page: currentPage, filters }));
+    const loadNannies = async () => {
+      await dispatch(fetchFilteredNannies({ page: currentPage, filters }));
+      setIsInitialLoad(false);
+
+      if (!loading && filters && nannies.length === 0 && !isInitialLoad) {
+        toast.info("No nannies found for the selected filters.", {
+          position: "top-center",
+        });
+      }
+    };
+
+    loadNannies();
   }, [dispatch, filters, currentPage]);
 
   useEffect(() => {
@@ -44,17 +55,10 @@ const Nannies: React.FC = () => {
     }
   }, [dispatch, favorites.length]);
 
-  useEffect(() => {
-    if (!loading && nannies.length === 0) {
-      toast.info("No nannies found for the selected filters.", {
-        position: "top-center",
-      });
-    }
-  }, [loading, nannies.length]);
-
   const handleFilterChange = (newFilters: Partial<typeof filters>) => {
     dispatch(resetNannies());
     dispatch(setPage(1));
+    setIsInitialLoad(true);
     dispatch(
       fetchFilteredNannies({ page: 1, filters: { ...filters, ...newFilters } })
     );
@@ -82,7 +86,7 @@ const Nannies: React.FC = () => {
         nannies={nannies}
       />
 
-      {!loading && nannies.length === 0 && (
+      {!loading && nannies.length === 0 && !isInitialLoad && (
         <NoResults onResetFilters={() => handleFilterChange({})} />
       )}
 

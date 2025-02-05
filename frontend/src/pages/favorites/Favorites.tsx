@@ -58,12 +58,12 @@ const FavoritesPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!loading && filteredFavorites.length === 0) {
+    if (!loading && favorites.length > 0 && filteredFavorites.length === 0) {
       toast.info("No nannies found for the selected filters.", {
         position: "top-center",
       });
     }
-  }, [loading, filteredFavorites.length]);
+  }, [loading, filteredFavorites, favorites]);
 
   const hasMoreItems = favoritesCurrentPage < totalPages;
 

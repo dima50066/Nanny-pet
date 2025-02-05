@@ -13,7 +13,7 @@ const Header = () => {
 
   return (
     <header
-      className={`mx-auto flex gap-5 p-5  max-w-[1248px] w-full flex-row items-center ${
+      className={`mx-auto flex gap-5 p-5 max-w-[1500px] flex-row items-center ${
         isCentered ? "" : "justify-between"
       }`}
     >
