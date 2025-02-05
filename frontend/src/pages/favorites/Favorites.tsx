@@ -6,6 +6,7 @@ import {
   selectFavoritesCurrentPage,
   selectFavoritesTotalPages,
   selectLoading,
+  selectFavorites,
 } from "../../redux/nanny/selectors";
 import { selectFilters } from "../../redux/filter/selectors";
 import Filters from "../../components/filters/Filters";
@@ -16,7 +17,6 @@ import NoResults from "../../components/nanny/NoResults";
 import { toast } from "react-toastify";
 import { setFavoritesPage } from "../../redux/nanny/slice";
 import Loader from "../../shared/loader/Loader";
-import { selectFavorites } from "../../redux/nanny/selectors";
 
 const FavoritesPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -25,11 +25,31 @@ const FavoritesPage: React.FC = () => {
   const filters = useSelector(selectFilters);
   const favoritesCurrentPage = useSelector(selectFavoritesCurrentPage);
   const totalPages = useSelector(selectFavoritesTotalPages);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const favorites = useSelector(selectFavorites);
 
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
   useEffect(() => {
-    dispatch(fetchFilteredFavorites({ page: favoritesCurrentPage, filters }));
+    const loadFavorites = async () => {
+      await dispatch(
+        fetchFilteredFavorites({ page: favoritesCurrentPage, filters })
+      );
+      setIsInitialLoad(false);
+
+      if (
+        !loading &&
+        favorites.length > 0 &&
+        filteredFavorites.length === 0 &&
+        !isInitialLoad
+      ) {
+        toast.info("No nannies found for the selected filters.", {
+          position: "top-center",
+        });
+      }
+    };
+
+    loadFavorites();
   }, [dispatch, favoritesCurrentPage, filters, favorites]);
 
   const handleFilterChange = (newFilters: Partial<typeof filters>) => {
@@ -38,6 +58,7 @@ const FavoritesPage: React.FC = () => {
       payload: { ...filters, ...newFilters },
     });
     dispatch(setFavoritesPage(1));
+    setIsInitialLoad(true);
     dispatch(
       fetchFilteredFavorites({
         page: 1,
@@ -57,25 +78,18 @@ const FavoritesPage: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (!loading && favorites.length > 0 && filteredFavorites.length === 0) {
-      toast.info("No nannies found for the selected filters.", {
-        position: "top-center",
-      });
-    }
-  }, [loading, filteredFavorites, favorites]);
-
   const hasMoreItems = favoritesCurrentPage < totalPages;
 
   return (
     <PageLayout>
       <Filters onFilterChange={handleFilterChange} />
+
       <NanniesList
         isLoading={loading && filteredFavorites.length === 0}
         nannies={filteredFavorites}
       />
 
-      {!loading && filteredFavorites.length === 0 && (
+      {!loading && filteredFavorites.length === 0 && !isInitialLoad && (
         <NoResults onResetFilters={() => handleFilterChange({})} />
       )}
 
