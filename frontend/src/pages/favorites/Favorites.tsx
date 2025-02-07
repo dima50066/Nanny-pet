@@ -82,31 +82,33 @@ const FavoritesPage: React.FC = () => {
 
   return (
     <PageLayout>
-      <Filters onFilterChange={handleFilterChange} />
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-5">
+        <Filters onFilterChange={handleFilterChange} />
 
-      <NanniesList
-        isLoading={loading && filteredFavorites.length === 0}
-        nannies={filteredFavorites}
-      />
+        <NanniesList
+          isLoading={loading && filteredFavorites.length === 0}
+          nannies={filteredFavorites}
+        />
 
-      {!loading && filteredFavorites.length === 0 && !isInitialLoad && (
-        <NoResults onResetFilters={() => handleFilterChange({})} />
-      )}
+        {!loading && filteredFavorites.length === 0 && !isInitialLoad && (
+          <NoResults onResetFilters={() => handleFilterChange({})} />
+        )}
 
-      {!loading && hasMoreItems && (
-        <div className="flex justify-center py-16">
-          {isLoadingMore ? (
-            <Loader />
-          ) : (
-            <button
-              className="nannies-loadMore bg-main"
-              onClick={handleLoadMore}
-            >
-              Load more
-            </button>
-          )}
-        </div>
-      )}
+        {!loading && hasMoreItems && (
+          <div className="flex justify-center py-10">
+            {isLoadingMore ? (
+              <Loader />
+            ) : (
+              <button
+                className="nannies-loadMore bg-main px-6 py-2 rounded-lg text-white hover:bg-opacity-80 transition"
+                onClick={handleLoadMore}
+              >
+                Load more
+              </button>
+            )}
+          </div>
+        )}
+      </div>
     </PageLayout>
   );
 };

@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from "react";
-import { Nanny as NannyType } from "../..//types";
-import Icon from "../..//shared/icon/Icon";
+import { Nanny as NannyType } from "../../types";
+import Icon from "../../shared/icon/Icon";
 import {
   addToFavorites,
   removeFromFavorites,
-} from "../..//redux/nanny/operations";
+} from "../../redux/nanny/operations";
 import { selectFavorites } from "../../redux/nanny/selectors";
 import { selectIsLoggedIn } from "../../redux/auth/selectors";
 import { useSelector, useDispatch } from "react-redux";
@@ -44,21 +44,14 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
   };
 
   const handleReadMoreClick = () => {
-    setIsExpanded(!isExpanded);
-  };
-
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+    setIsExpanded((prev) => !prev);
   };
 
   return (
-    <div className="flex p-6 bg-[#fbfbfb] border rounded-[24px] w-full">
-      <div className="flex-shrink-0 mr-6">
-        <div className="relative w-[96px] h-[96px] rounded-[15px] border-[2px] border-[#f03f3b33] p-[12px]">
+    <div className="flex flex-col md:flex-row p-6 bg-[#fbfbfb] border rounded-[24px] w-full gap-6">
+      {/* Фото */}
+      <div className="flex-shrink-0 mx-auto md:mx-0">
+        <div className="relative w-24 h-24 md:w-[96px] md:h-[96px] rounded-[15px] border-[2px] border-[#f03f3b33] p-[12px]">
           <img
             src={nanny.avatar}
             alt={nanny.name}
@@ -67,39 +60,29 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
         </div>
       </div>
 
-      <div className="flex-1">
-        <div className="flex direction-row justify-between mb-[8px]">
-          <p className="text-subtitle">Nanny</p>
-          <div className="flex direction-row items-center gap-4">
-            <div className="flex items-center gap-2 border-r border-gray-300 pr-4">
-              <Icon id="location" className="w-4 h-4 text-gray-500" />
-              <p className="nannies-header-text">{nanny.location}</p>
-            </div>
-            <div className="flex items-center gap-2 border-r border-gray-300 pr-4">
-              <Icon id="star" className="w-4 h-4 text-yellow-400" />
-              <p className="nannies-header-text">Rating: {nanny.rating}</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <p className="nannies-header-text">Price / 1 hour:</p>
-              <span className="text-[#38cd3e]">{nanny.price_per_hour}$</span>
-            </div>
+      {/* Інформація */}
+      <div className="flex flex-col flex-1">
+        <div className="flex flex-col md:flex-row justify-between">
+          <h2 className="text-lg font-semibold text-gray-700">{nanny.name}</h2>
+          <button onClick={handleFavoriteClick} className="self-end">
             <Icon
               id={isFavorite ? "heart-filled" : "heart"}
               className={`w-6 h-6 cursor-pointer ${
                 isFavorite ? "text-red-500" : "text-gray-500"
               } hover:text-red-500`}
-              onClick={handleFavoriteClick}
             />
-          </div>
+          </button>
         </div>
 
-        <div className="pb-[24px]">
-          <h2 className="nannies-name">{nanny.name}</h2>
-        </div>
-        <div className="flex gap-2 flex-wrap pb-[24px]">
-          <div className="nannies-panels">
-            <p className="nannies-panels-title">Age:</p>
-            <p className="nannies-panels-text underline">
+        <p className="text-gray-500">{nanny.location}</p>
+        <p className="text-gray-500">Experience: {nanny.experience} </p>
+        <p className="text-gray-500">Price: {nanny.price_per_hour}$ / hour</p>
+
+        {/* Додаткова інформація */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 py-4">
+          <div className="bg-gray-100 p-3 rounded-lg text-center">
+            <p className="text-xs text-gray-600">Age</p>
+            <p className="font-semibold">
               {new Date().getFullYear() -
                 new Date(nanny.birthday).getFullYear() -
                 (new Date().getMonth() < new Date(nanny.birthday).getMonth() ||
@@ -110,27 +93,16 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
                   : 0)}
             </p>
           </div>
-          <div className="nannies-panels">
-            <p className="nannies-panels-title">Experience:</p>
-            <p className="nannies-panels-text">{nanny.experience}</p>
+          <div className="bg-gray-100 p-3 rounded-lg text-center">
+            <p className="text-xs text-gray-600">Kids age</p>
+            <p className="font-semibold">{nanny.kids_age} years old</p>
           </div>
-          <div className="nannies-panels">
-            <p className="nannies-panels-title">Kids age:</p>
-            <p className="nannies-panels-text">{nanny.kids_age} years old</p>
-          </div>
-          <div className="nannies-panels">
-            <p className="nannies-panels-title">Characters:</p>
-            <p className="nannies-panels-text">
-              {Array.isArray(nanny.characters)
-                ? nanny.characters.join(", ")
-                : nanny.characters}
-            </p>{" "}
-          </div>
-          <div className="nannies-panels ">
-            <p className="nannies-panels-title">Education:</p>
-            <p className="nannies-panels-text">{nanny.education}</p>
+          <div className="bg-gray-100 p-3 rounded-lg text-center">
+            <p className="text-xs text-gray-600">Education</p>
+            <p className="font-semibold">{nanny.education}</p>
           </div>
         </div>
+
         <div>
           <p className="text-sm text-gray-600 mb-4">
             {nanny.about.length > 100
@@ -138,43 +110,46 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
               : nanny.about}
           </p>
         </div>
-        <div>
-          <button className="nannies-read-more" onClick={handleReadMoreClick}>
+
+        {/* Кнопки */}
+        <div className="flex flex-col sm:flex-row gap-4 mt-4">
+          <button
+            className="w-40 md:w-48 lg:w-56 bg-main text-white py-2 rounded-lg hover:bg-opacity-80 transition self-center"
+            onClick={handleReadMoreClick}
+          >
             {isExpanded ? "Show less" : "Read more"}
+          </button>
+          <button
+            className="w-40 md:w-48 lg:w-56 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition self-center"
+            onClick={() => setIsModalOpen(true)}
+          >
+            Make an appointment
           </button>
         </div>
 
+        {/* Розширений вміст */}
         {isExpanded && (
-          <div className="mt-4">
+          <div className="mt-4 transition-all duration-300 ease-in-out max-w-3xl">
+            <h3 className="text-md font-semibold mb-2">Reviews:</h3>
             <div className="space-y-4">
               {nanny.reviews.map((review, index) => (
-                <div key={index} className="p-4 rounded-md">
-                  <div className="flex mb-[16px]">
-                    <div className="w-[44px] h-[44px] bg-gray-200 text-black text-center rounded-full flex items-center justify-center">
+                <div key={index} className="p-4 bg-gray-100 rounded-[20px]">
+                  <div className="flex mb-2 items-center">
+                    <div className="w-10 h-10 bg-gray-300 text-black rounded-full flex items-center justify-center">
                       {review.author.charAt(0)}
                     </div>
-                    <div className="ml-2 flex flex-col">
-                      <p className="nannies-reviewer-name pb-[4px]">
-                        {review.author}
-                      </p>
-                      <div className="flex flex-row">
-                        <Icon
-                          id="star"
-                          className="w-4 h-4 text-yellow-400 mr-1"
-                        />
-                        <p className="nannies-reviewer-rating">
-                          {review.rating}
-                        </p>
+                    <div className="ml-3">
+                      <p className="text-sm font-semibold">{review.author}</p>
+                      <div className="flex items-center text-yellow-500">
+                        <Icon id="star" className="w-4 h-4" />
+                        <p>{review.rating}</p>
                       </div>
                     </div>
                   </div>
-                  <p className="text-subtitle">{review.comment}</p>
+                  <p className="text-sm">{review.comment}</p>
                 </div>
               ))}
             </div>
-            <button className="nannies-app-btn" onClick={handleOpenModal}>
-              Make an appointment
-            </button>
           </div>
         )}
       </div>
@@ -182,13 +157,13 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
       <Modal
         isOpen={isModalOpen}
         classNameWrapper="rounded-[30px]"
-        onClose={handleCloseModal}
+        onClose={() => setIsModalOpen(false)}
       >
         <AppointmentForm
           nannyName={nanny.name}
           nannyAvatar={nanny.avatar}
           nannyId={nanny._id}
-          onCloseModal={handleCloseModal}
+          onCloseModal={() => setIsModalOpen(false)}
         />
       </Modal>
     </div>
