@@ -69,14 +69,12 @@ const CreateNannyProfile: React.FC<CreateNannyProfileProps> = ({ onClose }) => {
     e.preventDefault();
 
     if (!avatarFile) {
-      alert("Please upload an avatar file.");
+      toast.error("Please upload an avatar file.");
       return;
     }
 
     const payload = {
-      data: {
-        ...formData,
-      },
+      data: { ...formData },
       file: avatarFile,
     };
 
@@ -88,169 +86,170 @@ const CreateNannyProfile: React.FC<CreateNannyProfileProps> = ({ onClose }) => {
     if (window.confirm("Are you sure you want to delete your nanny profile?")) {
       try {
         await dispatch(deleteNannyProfile());
-        toast("Nanny profile deleted successfully!");
+        toast.success("Nanny profile deleted successfully!");
       } catch (error) {
-        toast.error("Failed to delete nanny profile:");
+        toast.error("Failed to delete nanny profile.");
         console.error("Failed to delete nanny profile:", error);
       }
     }
   };
 
   return (
-    <div className="p-6">
+    <div className="w-full  max-w-[700px] max-h-[95vh] bg-white shadow-lg rounded-2xl mx-auto p-6 sm:p-8 flex flex-col">
       {myNannyProfile ? (
         <button
-          className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
+          className="w-full sm:w-64 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition"
           onClick={handleDeleteProfile}
         >
           Delete Nanny Profile
         </button>
       ) : (
-        <h2 className="text-xl font-bold mb-4">Create Nanny Profile</h2>
-      )}
+        <>
+          <h2 className="text-title pb-3 sm:pb-4 text-center">
+            Create Nanny Profile
+          </h2>
 
-      {!myNannyProfile && (
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="w-full input input-text"
+                  required
+                  placeholder="Alexandra"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium">Avatar</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="w-full input input-text"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium">Birthday</label>
+                <input
+                  type="date"
+                  name="birthday"
+                  value={formData.birthday}
+                  onChange={handleChange}
+                  className="w-full input input-text"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium">Experience</label>
+                <input
+                  type="text"
+                  name="experience"
+                  value={formData.experience}
+                  onChange={handleChange}
+                  className="w-full input input-text"
+                  required
+                  placeholder="1 year of experience"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium">Education</label>
+                <input
+                  type="text"
+                  name="education"
+                  value={formData.education}
+                  onChange={handleChange}
+                  className="w-full input input-text"
+                  required
+                  placeholder="Bachelor of Psychology"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium">Kids Age</label>
+                <input
+                  type="text"
+                  name="kids_age"
+                  value={formData.kids_age}
+                  onChange={handleChange}
+                  className="w-full input input-text"
+                  required
+                  placeholder="2-4 years old"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium">
+                  Price per Hour
+                </label>
+                <input
+                  type="number"
+                  name="price_per_hour"
+                  value={formData.price_per_hour}
+                  onChange={handleChange}
+                  className="w-full input input-text"
+                  required
+                  placeholder="Enter the price per hour"
+                  min={5}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium">Location</label>
+                <input
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  className="w-full input input-text"
+                  required
+                  placeholder="Kyiv, Ukraine"
+                />
+              </div>
+            </div>
+
             <div>
-              <label className="block text-sm font-medium">Name</label>
+              <label className="block text-sm font-medium">About</label>
+              <textarea
+                name="about"
+                value={formData.about}
+                onChange={handleChange}
+                className="w-full input input-text resize-none h-24"
+                required
+                placeholder="Tell us about yourself"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium">Characters</label>
               <input
                 type="text"
-                name="name"
-                value={formData.name}
+                name="characters"
+                value={formData.characters}
                 onChange={handleChange}
-                className="w-full border border-gray-300 p-2 rounded"
+                className="w-full input input-text"
                 required
-                placeholder="Alexandra"
+                placeholder="Compassionate, Patient, Responsible"
               />
             </div>
-
-            <div>
-              <label className="block text-sm font-medium">Avatar</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="w-full border border-gray-300 p-2 rounded"
-              />
+            <div className="text-center">
+              <button
+                type="submit"
+                className="w-full sm:w-64 bg-main text-white py-2 rounded-lg hover:bg-green-700 transition"
+                disabled={loading}
+              >
+                {loading ? "Creating..." : "Create Profile"}
+              </button>
             </div>
-
-            <div>
-              <label className="block text-sm font-medium">Birthday</label>
-              <input
-                type="date"
-                name="birthday"
-                value={formData.birthday}
-                onChange={handleChange}
-                className="w-full border border-gray-300 p-2 rounded"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">Experience</label>
-              <input
-                type="text"
-                name="experience"
-                value={formData.experience}
-                onChange={handleChange}
-                className="w-full border border-gray-300 p-2 rounded"
-                required
-                placeholder="1 year of experience"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">Education</label>
-              <input
-                type="text"
-                name="education"
-                value={formData.education}
-                onChange={handleChange}
-                className="w-full border border-gray-300 p-2 rounded"
-                required
-                placeholder="Bachelor of Psychology"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">Kids Age</label>
-              <input
-                type="text"
-                name="kids_age"
-                value={formData.kids_age}
-                onChange={handleChange}
-                className="w-full border border-gray-300 p-2 rounded"
-                required
-                placeholder="2-4 years old"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">
-                Price per Hour
-              </label>
-              <input
-                type="number"
-                name="price_per_hour"
-                value={formData.price_per_hour}
-                onChange={handleChange}
-                className="w-full border border-gray-300 p-2 rounded"
-                required
-                placeholder="Enter the price per hour"
-                min={5}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium">Location</label>
-              <input
-                type="text"
-                name="location"
-                value={formData.location}
-                onChange={handleChange}
-                className="w-full border border-gray-300 p-2 rounded"
-                required
-                placeholder="Kyiv, Ukraine"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium">About</label>
-            <textarea
-              name="about"
-              value={formData.about}
-              onChange={handleChange}
-              className="w-full border border-gray-300 p-2 rounded resize-none "
-              required
-              placeholder="Tell us about yourself"
-            ></textarea>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium">Characters</label>
-            <input
-              type="text"
-              name="characters"
-              value={formData.characters}
-              onChange={handleChange}
-              className="w-full border border-gray-300 p-2 rounded"
-              required
-              placeholder="Compassionate, Patient, Responsible"
-            />
-          </div>
-
-          <div className="flex justify-center">
-            <button
-              type="submit"
-              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-              disabled={loading}
-            >
-              {loading ? "Creating..." : "Create Profile"}
-            </button>
-          </div>
-        </form>
+          </form>
+        </>
       )}
     </div>
   );

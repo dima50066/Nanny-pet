@@ -60,6 +60,7 @@ const AppointmentInfo: React.FC<AppointmentInfoProps> = ({ appointment }) => {
         <Modal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
+          classNameWrapper="rounded-[20px]"
         >
           <EditAppointmentForm
             appointment={appointment}

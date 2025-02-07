@@ -78,12 +78,14 @@ const AuthNav: React.FC = () => {
       <Modal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
+        classNameWrapper="rounded-[30px]"
       >
         <LoginModal />
       </Modal>
       <Modal
         isOpen={isRegisterModalOpen}
         onClose={() => setIsRegisterModalOpen(false)}
+        classNameWrapper="rounded-[30px]"
       >
         <RegisterModal />
       </Modal>

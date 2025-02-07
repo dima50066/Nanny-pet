@@ -111,108 +111,100 @@ const EditAppointmentForm: React.FC<EditAppointmentFormProps> = ({
   };
 
   return (
-    <div className="p-[35px] w-[550px] bg-white">
-      <div className="w-[472px] bg-white">
-        <h1 className="nannies-app-title">Edit Appointment</h1>
-        <p className="text-subtitle mb-[40px]">
-          Update the details of your appointment with the babysitter.
-        </p>
+    <div className="w-full  max-w-[600px] max-h-[90vh] overflow-y-auto bg-white shadow-lg rounded-2xl mx-auto p-6 sm:p-8 flex flex-col">
+      <h1 className="text-title pb-3 sm:pb-4 text-center">Edit Appointment</h1>
+      <p className="text-subtitle pb-5 sm:pb-6 text-center">
+        Update the details of your appointment with the babysitter.
+      </p>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <input
-                type="text"
-                placeholder="Address"
-                {...register("address")}
-                className="nannies-app-input"
-              />
-              {errors.address && (
-                <p className="text-red-500 text-sm">{errors.address.message}</p>
-              )}
-            </div>
-
-            <div>
-              <input
-                type="tel"
-                placeholder="(+380)"
-                {...register("phone")}
-                className="nannies-app-input"
-              />
-              {errors.phone && (
-                <p className="text-red-500 text-sm">{errors.phone.message}</p>
-              )}
-            </div>
-
-            <div>
-              <input
-                type="number"
-                placeholder="Child's age"
-                {...register("childAge")}
-                className="nannies-app-input"
-              />
-              {errors.childAge && (
-                <p className="text-red-500 text-sm">
-                  {errors.childAge.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <CustomTimePicker
-                selectedTime={meetingTime}
-                onSelect={handleTimeSelect}
-              />
-            </div>
-          </div>
-
-          <div>
-            <input
-              type="email"
-              placeholder="Email"
-              {...register("email")}
-              className="nannies-app-input"
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email.message}</p>
-            )}
-          </div>
-
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <input
               type="text"
-              placeholder="Father's or mother's name"
-              {...register("parentName")}
-              className="nannies-app-input"
+              placeholder="Address"
+              {...register("address")}
+              className="w-full input input-text"
             />
-            {errors.parentName && (
-              <p className="text-red-500 text-sm">
-                {errors.parentName.message}
-              </p>
+            {errors.address && (
+              <p className="text-red-500 text-sm">{errors.address.message}</p>
             )}
           </div>
 
           <div>
-            <textarea
-              placeholder="Comment"
-              {...register("comment")}
-              className="nannies-app-input resize-none w-[472px] h-[116px]"
+            <input
+              type="tel"
+              placeholder="(+380)"
+              {...register("phone")}
+              className="w-full input input-text"
             />
-            {errors.comment && (
-              <p className="text-red-500 text-sm">{errors.comment.message}</p>
+            {errors.phone && (
+              <p className="text-red-500 text-sm">{errors.phone.message}</p>
             )}
           </div>
 
-          <div className="flex items-center justify-center">
-            <button
-              type="submit"
-              className="w-[472px] h-[52px] py-3 bg-main text-white font-medium rounded-[30px] hover:bg-green-700 transition"
-            >
-              Update
-            </button>
+          <div>
+            <input
+              type="number"
+              placeholder="Child's age"
+              {...register("childAge")}
+              className="w-full input input-text"
+            />
+            {errors.childAge && (
+              <p className="text-red-500 text-sm">{errors.childAge.message}</p>
+            )}
           </div>
-        </form>
-      </div>
+
+          <div>
+            <CustomTimePicker
+              selectedTime={meetingTime}
+              onSelect={handleTimeSelect}
+            />
+          </div>
+        </div>
+
+        <div>
+          <input
+            type="email"
+            placeholder="Email"
+            {...register("email")}
+            className="w-full input input-text"
+          />
+          {errors.email && (
+            <p className="text-red-500 text-sm">{errors.email.message}</p>
+          )}
+        </div>
+
+        <div>
+          <input
+            type="text"
+            placeholder="Father's or mother's name"
+            {...register("parentName")}
+            className="w-full input input-text"
+          />
+          {errors.parentName && (
+            <p className="text-red-500 text-sm">{errors.parentName.message}</p>
+          )}
+        </div>
+
+        <div>
+          <textarea
+            placeholder="Comment"
+            {...register("comment")}
+            className="w-full input input-text h-24 resize-none"
+          />
+          {errors.comment && (
+            <p className="text-red-500 text-sm">{errors.comment.message}</p>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-main text-white text-[16px] font-medium rounded-[30px] py-3 hover:bg-green-700 transition"
+        >
+          Update
+        </button>
+      </form>
     </div>
   );
 };

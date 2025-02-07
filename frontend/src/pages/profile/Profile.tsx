@@ -27,7 +27,11 @@ const ProfilePage = () => {
           Manage Nanny Profile
         </button>
 
-        <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+        <Modal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          classNameWrapper="rounded-[20px]"
+        >
           <CreateNannyProfile isOpen={isModalOpen} onClose={handleCloseModal} />
         </Modal>
 
