@@ -14,9 +14,9 @@ const RightSide = () => {
   }, [dispatch]);
 
   return (
-    <div className="bg-[url('/public/img/kid.png')] bg-no-repeat bg-cover overflow-hidden w-1/2 h-[784px] rounded-tr-[30px] rounded-br-[30px]">
-      <div className="flex justify-center items-center mx-auto bg-white p-4 w-[284px] gap-3 mt-[590px] rounded-[30px] py-8 px-0 ml-[365px]">
-        <div className="flex justify-center items-center bg-main rounded-[13px] w-[54px] h-[54px]">
+    <div className="bg-[url('/public/img/kid.png')] bg-no-repeat bg-cover w-full md:flex-1 h-[400px] md:h-[784px] flex justify-center items-end p-6 md:p-12">
+      <div className="bg-white p-6 rounded-[30px] flex items-center gap-4 shadow-lg w-full max-w-xs md:max-w-sm">
+        <div className="bg-main rounded-[13px] w-[54px] h-[54px] flex justify-center items-center">
           <Icon
             id="checkmark-ok"
             className="text-white"
@@ -24,7 +24,7 @@ const RightSide = () => {
             height={30}
           />
         </div>
-        <div className="flex flex-col">
+        <div>
           <h4 className="text-subtitle">Experienced nannies</h4>
           <p className="welcome-right-text">{totalNanniesCount}</p>
         </div>

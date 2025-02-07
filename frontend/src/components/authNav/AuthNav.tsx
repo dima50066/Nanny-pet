@@ -17,81 +17,73 @@ const AuthNav: React.FC = () => {
     selectIsLoggedIn(state)
   );
   const user = useSelector((state: RootState) => selectUser(state));
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
-  const [isRegisterModalOpen, setIsRegisterModalOpen] =
-    useState<boolean>(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const myNannyProfile = useSelector((state: RootState) =>
     selectMyNannyProfile(state)
   );
 
-  const openLoginModal = () => setIsLoginModalOpen(true);
-  const openRegisterModal = () => setIsRegisterModalOpen(true);
-  const closeLoginModal = () => setIsLoginModalOpen(false);
-  const closeRegisterModal = () => setIsRegisterModalOpen(false);
-
-  const handleLogout = () => {
-    dispatch(logoutUser());
-  };
-
-  const handleProfileClick = () => {
-    navigate("/profile");
-  };
-
-  const getShortUserName = (name?: string): string => {
-    if (!name) return "User";
-    return name.length > 10 ? `${name.slice(0, 10)}..` : name;
+  // Функція для отримання короткого імені
+  const getShortUserName = (): string => {
+    if (!user || !user.name) return "User"; // Безпечна перевірка
+    return user.name.length > 10 ? `${user.name.slice(0, 10)}..` : user.name;
   };
 
   return (
-    <div className="flex items-center gap-[8px]">
+    <div className="flex items-center gap-4">
       {!isAuthenticated ? (
-        <>
-          <button className="authNavBtn" onClick={openLoginModal}>
+        <div className="flex gap-2 flex-col md:flex-row">
+          <button
+            className="authNavBtn"
+            onClick={() => setIsLoginModalOpen(true)}
+          >
             Log In
           </button>
-          <button className="authNavBtn bg-main" onClick={openRegisterModal}>
+          <button
+            className="authNavBtn bg-main"
+            onClick={() => setIsRegisterModalOpen(true)}
+          >
             Registration
           </button>
-        </>
+        </div>
       ) : (
-        <div className="flex items-center gap-[8px]">
-          <div className="flex items-center gap-2">
-            <span
-              onClick={handleProfileClick}
-              className=" p-1.5 rounded-lg flex items-center justify-center cursor-pointer"
-            >
-              {myNannyProfile?.avatar ? (
-                <img
-                  src={myNannyProfile.avatar}
-                  alt={myNannyProfile.name}
-                  className="w-[50px] h-[50px] rounded-full object-cover"
-                />
-              ) : (
-                <Icon id="user" className="w-9 h-9 text-gray-500" />
-              )}
-            </span>
-            <p className="text-white text-lg font-medium">
-              {getShortUserName(user?.name)}
-            </p>
-          </div>
-          <button className="w-32 bg-main authNavBtn" onClick={handleLogout}>
+        <div className="flex items-center gap-3">
+          <span
+            onClick={() => navigate("/profile")}
+            className="p-1.5 rounded-lg flex items-center justify-center cursor-pointer"
+          >
+            {myNannyProfile?.avatar ? (
+              <img
+                src={myNannyProfile.avatar}
+                alt={myNannyProfile.name || "Profile"}
+                className="w-[40px] h-[40px] rounded-full object-cover"
+              />
+            ) : (
+              <Icon id="user" className="w-8 h-8 text-gray-500" />
+            )}
+          </span>
+          <p className="text-white text-sm md:text-lg font-medium">
+            {getShortUserName()}
+          </p>
+          <button
+            className="w-28 bg-main authNavBtn"
+            onClick={() => dispatch(logoutUser())}
+          >
             Log Out
           </button>
         </div>
       )}
 
+      {/* Модальні вікна авторизації */}
       <Modal
         isOpen={isLoginModalOpen}
-        onClose={closeLoginModal}
-        classNameWrapper="rounded-[30px]"
+        onClose={() => setIsLoginModalOpen(false)}
       >
         <LoginModal />
       </Modal>
-
       <Modal
         isOpen={isRegisterModalOpen}
-        onClose={closeRegisterModal}
-        classNameWrapper="rounded-[30px]"
+        onClose={() => setIsRegisterModalOpen(false)}
       >
         <RegisterModal />
       </Modal>

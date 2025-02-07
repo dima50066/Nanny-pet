@@ -4,7 +4,9 @@ type WrapperProps = {
 
 const Wrapper = ({ children }: WrapperProps) => {
   return (
-    <div className="h-full rounded-[30px] flex w-full flex-row">{children}</div>
+    <div className="h-full rounded-[30px] flex flex-col md:flex-row w-full max-w-none">
+      {children}
+    </div>
   );
 };
 
