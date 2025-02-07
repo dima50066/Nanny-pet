@@ -36,30 +36,40 @@ const RequestResetPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">
-        Reset Your Password
-      </h1>
-      <form
-        className="bg-white p-6 rounded shadow-md w-full max-w-md"
-        onSubmit={handleSubmit}
-      >
-        <input
-          className="border border-gray-300 rounded w-full p-3 mb-4"
-          type="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+    <div className="flex flex-col items-center justify-center min-h-screen px-4 bg-gray-100">
+      <div className="w-full max-w-sm sm:max-w-md bg-white p-6 sm:p-8 rounded-2xl shadow-md">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-800 text-center mb-4">
+          Reset Your Password
+        </h1>
+        <p className="text-sm text-gray-600 text-center mb-6">
+          Enter your email address to receive a password reset link.
+        </p>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            className="border border-gray-300 rounded-lg w-full p-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <button
+            className="w-full bg-green-600 text-white font-semibold py-2 rounded-lg hover:bg-green-700 transition disabled:opacity-70"
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? "Sending..." : "Send Reset Email"}
+          </button>
+        </form>
+
         <button
-          className="bg-green-600 text-white font-semibold py-2 px-4 rounded w-full hover:bg-green-700"
-          type="submit"
-          disabled={isLoading}
+          className="w-full mt-4 text-gray-600 text-sm hover:underline"
+          onClick={() => navigate("/")}
         >
-          {isLoading ? "Sending..." : "Send Reset Email"}
+          ← Back to Home
         </button>
-      </form>
+      </div>
     </div>
   );
 };
