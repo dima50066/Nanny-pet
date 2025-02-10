@@ -64,7 +64,6 @@ const ResetPasswordPage: React.FC = () => {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Поле для нового пароля */}
           <div className="relative">
             <input
               className="border border-gray-300 rounded-lg w-full p-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -86,7 +85,6 @@ const ResetPasswordPage: React.FC = () => {
             </button>
           </div>
 
-          {/* Поле для підтвердження пароля */}
           <div className="relative">
             <input
               className="border border-gray-300 rounded-lg w-full p-3 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"

@@ -34,11 +34,9 @@ const NanniesList: React.FC<NanniesListProps> = ({ nannies, isLoading }) => {
           <Loader />
         </div>
       ) : (
-        <div className="flex flex-col gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {nannies.map((nanny) => (
-            <div key={nanny._id} className="w-full">
-              <Nanny nanny={nanny} />
-            </div>
+            <Nanny key={nanny._id} nanny={nanny} />
           ))}
         </div>
       )}

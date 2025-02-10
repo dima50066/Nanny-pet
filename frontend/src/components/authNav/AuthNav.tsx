@@ -23,9 +23,8 @@ const AuthNav: React.FC = () => {
     selectMyNannyProfile(state)
   );
 
-  // Функція для отримання короткого імені
   const getShortUserName = (): string => {
-    if (!user || !user.name) return "User"; // Безпечна перевірка
+    if (!user || !user.name) return "User";
     return user.name.length > 10 ? `${user.name.slice(0, 10)}..` : user.name;
   };
 
@@ -74,7 +73,6 @@ const AuthNav: React.FC = () => {
         </div>
       )}
 
-      {/* Модальні вікна авторизації */}
       <Modal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}

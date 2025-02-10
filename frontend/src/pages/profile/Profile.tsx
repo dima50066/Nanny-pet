@@ -37,7 +37,6 @@ const ProfilePage = () => {
         </h1>
 
         <div className="flex flex-col sm:flex-row justify-center sm:justify-start gap-4">
-          {/* Якщо профілю нема - показуємо кнопку Create */}
           {!myNannyProfile ? (
             <button
               className="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition w-full sm:w-auto"
@@ -47,7 +46,6 @@ const ProfilePage = () => {
             </button>
           ) : (
             <>
-              {/* Кнопка Edit */}
               <button
                 className="bg-yellow-500 text-white py-2 px-6 rounded-lg hover:bg-yellow-600 transition w-full sm:w-auto"
                 onClick={() => setIsEditModalOpen(true)}
@@ -55,7 +53,6 @@ const ProfilePage = () => {
                 Edit Profile
               </button>
 
-              {/* Кнопка Delete */}
               <button
                 className="bg-red-500 text-white py-2 px-6 rounded-lg hover:bg-red-600 transition w-full sm:w-auto"
                 onClick={handleDeleteProfile}
@@ -65,7 +62,6 @@ const ProfilePage = () => {
             </>
           )}
 
-          {/* Кнопка зміни пароля */}
           <Link
             to="/request-reset"
             className="bg-gray-500 text-white py-2 px-6 rounded-lg hover:bg-gray-600 transition w-full sm:w-auto text-center"
@@ -74,7 +70,6 @@ const ProfilePage = () => {
           </Link>
         </div>
 
-        {/* Модалка для створення профілю */}
         <Modal
           isOpen={isCreateModalOpen}
           onClose={() => setIsCreateModalOpen(false)}
@@ -86,7 +81,6 @@ const ProfilePage = () => {
           />
         </Modal>
 
-        {/* Модалка для редагування профілю */}
         <Modal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}

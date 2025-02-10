@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Nanny as NannyType } from "../../types";
+import { Nanny as NannyType, Review } from "../../types";
 import Icon from "../../shared/icon/Icon";
 import {
   addToFavorites,
@@ -16,6 +16,47 @@ import { toast } from "react-toastify";
 interface NannyProps {
   nanny: NannyType;
 }
+
+const InfoPanel = ({
+  title,
+  value,
+}: {
+  title: string;
+  value: string | number;
+}) => (
+  <div className="text-sm bg-gray-50 p-4 border rounded-[20px]">
+    <p className="font-medium text-gray-700">{title}:</p>
+    <p className="text-gray-600">{value}</p>
+  </div>
+);
+
+const ReviewCard = ({ review }: { review: Review }) => (
+  <div className="p-4 border rounded-md bg-gray-50">
+    <div className="flex items-center gap-2 mb-2">
+      <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-700">
+        {review.author.charAt(0)}
+      </div>
+      <div>
+        <p className="font-medium">{review.author}</p>
+        <div className="flex items-center">
+          <Icon id="star" className="w-4 h-4 text-yellow-400" />
+          <p className="ml-1 text-sm">{review.rating}</p>
+        </div>
+      </div>
+    </div>
+    <p className="text-sm">{review.comment}</p>
+  </div>
+);
+
+const calculateAge = (birthday: string) => {
+  const birthDate = new Date(birthday);
+  const age = new Date().getFullYear() - birthDate.getFullYear();
+  const monthDifference = new Date().getMonth() - birthDate.getMonth();
+  return monthDifference < 0 ||
+    (monthDifference === 0 && new Date().getDate() < birthDate.getDate())
+    ? age - 1
+    : age;
+};
 
 const Nanny: React.FC<NannyProps> = ({ nanny }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -43,146 +84,96 @@ const Nanny: React.FC<NannyProps> = ({ nanny }) => {
     }
   };
 
-  const handleReadMoreClick = () => {
-    setIsExpanded(!isExpanded);
-  };
-
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+  const handleReadMoreClick = () => setIsExpanded(!isExpanded);
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
 
   return (
-    <div className="flex p-6 bg-[#fbfbfb] border rounded-[24px] w-full">
-      <div className="flex-shrink-0 mr-6">
-        <div className="relative w-[96px] h-[96px] rounded-[15px] border-[2px] border-[#f03f3b33] p-[12px]">
+    <div className="p-4 bg-[#fbfbfb] border rounded-2xl w-full max-w-lg mx-auto">
+      <div className="flex flex-col md:flex-row md:items-start gap-4">
+        <div className="flex-shrink-0">
           <img
             src={nanny.avatar}
             alt={nanny.name}
-            className="w-full h-full bg-[#e0e0e0] rounded-[15px] object-cover"
+            className="w-24 h-24 bg-gray-200 rounded-lg object-cover border border-gray-300"
           />
         </div>
-      </div>
-
-      <div className="flex-1">
-        <div className="flex direction-row justify-between mb-[8px]">
-          <p className="text-subtitle">Nanny</p>
-          <div className="flex direction-row items-center gap-4">
-            <div className="flex items-center gap-2 border-r border-gray-300 pr-4">
-              <Icon id="location" className="w-4 h-4 text-gray-500" />
-              <p className="nannies-header-text">{nanny.location}</p>
-            </div>
-            <div className="flex items-center gap-2 border-r border-gray-300 pr-4">
-              <Icon id="star" className="w-4 h-4 text-yellow-400" />
-              <p className="nannies-header-text">Rating: {nanny.rating}</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <p className="nannies-header-text">Price / 1 hour:</p>
-              <span className="text-[#38cd3e]">{nanny.price_per_hour}$</span>
-            </div>
+        <div className="flex-1">
+          <div className="flex justify-between items-center mb-2">
+            <p className="text-sm font-medium text-gray-700">Nanny</p>
             <Icon
               id={isFavorite ? "heart-filled" : "heart"}
               className={`w-6 h-6 cursor-pointer ${
-                isFavorite ? "text-red-500" : "text-gray-500"
+                isFavorite ? "text-red-500" : "text-gray-400"
               } hover:text-red-500`}
               onClick={handleFavoriteClick}
             />
           </div>
-        </div>
-
-        <div className="pb-[24px]">
-          <h2 className="nannies-name">{nanny.name}</h2>
-        </div>
-        <div className="flex gap-2 flex-wrap pb-[24px]">
-          <div className="nannies-panels">
-            <p className="nannies-panels-title">Age:</p>
-            <p className="nannies-panels-text underline">
-              {new Date().getFullYear() -
-                new Date(nanny.birthday).getFullYear() -
-                (new Date().getMonth() < new Date(nanny.birthday).getMonth() ||
-                (new Date().getMonth() ===
-                  new Date(nanny.birthday).getMonth() &&
-                  new Date().getDate() < new Date(nanny.birthday).getDate())
-                  ? 1
-                  : 0)}
-            </p>
+          <h2 className="text-lg font-semibold">{nanny.name}</h2>
+          <div className="flex flex-wrap gap-2 my-4">
+            <div className="flex items-center gap-2 text-sm">
+              <Icon id="location" className="w-4 h-4 text-gray-500" />
+              <p>{nanny.location}</p>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <Icon id="star" className="w-4 h-4 text-yellow-400" />
+              <p>Rating: {nanny.rating}</p>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <p>Price / 1 hour:</p>
+              <span className="text-green-600 font-medium">
+                {nanny.price_per_hour}$
+              </span>
+            </div>
           </div>
-          <div className="nannies-panels">
-            <p className="nannies-panels-title">Experience:</p>
-            <p className="nannies-panels-text">{nanny.experience}</p>
+          <div className="grid grid-cols-2 gap-2">
+            <InfoPanel title="Age" value={`${calculateAge(nanny.birthday)}`} />
+            <InfoPanel title="Experience" value={nanny.experience} />
+            <InfoPanel title="Kids age" value={`${nanny.kids_age} years old`} />
+            <InfoPanel
+              title="Characters"
+              value={
+                Array.isArray(nanny.characters)
+                  ? nanny.characters.join(", ")
+                  : nanny.characters || "Not specified"
+              }
+            />
+            <InfoPanel title="Education" value={nanny.education} />
           </div>
-          <div className="nannies-panels">
-            <p className="nannies-panels-title">Kids age:</p>
-            <p className="nannies-panels-text">{nanny.kids_age} years old</p>
-          </div>
-          <div className="nannies-panels">
-            <p className="nannies-panels-title">Characters:</p>
-            <p className="nannies-panels-text">
-              {Array.isArray(nanny.characters)
-                ? nanny.characters.join(", ")
-                : nanny.characters || "Not specified"}
-            </p>
-          </div>
-          <div className="nannies-panels ">
-            <p className="nannies-panels-title">Education:</p>
-            <p className="nannies-panels-text">{nanny.education}</p>
-          </div>
-        </div>
-        <div>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-gray-600 mt-4">
             {nanny.about.length > 100
               ? `${nanny.about.slice(0, 100)}...`
               : nanny.about}
           </p>
-        </div>
-        <div>
-          <button className="nannies-read-more" onClick={handleReadMoreClick}>
+          <button
+            className="text-blue-500 mt-2 text-sm"
+            onClick={handleReadMoreClick}
+          >
             {isExpanded ? "Show less" : "Read more"}
           </button>
-        </div>
 
-        {isExpanded && (
-          <div className="mt-4">
-            <div className="space-y-4">
-              {nanny.reviews.map((review, index) => (
-                <div key={index} className="p-4 rounded-md">
-                  <div className="flex mb-[16px]">
-                    <div className="w-[44px] h-[44px] bg-gray-200 text-black text-center rounded-full flex items-center justify-center">
-                      {review.author.charAt(0)}
-                    </div>
-                    <div className="ml-2 flex flex-col">
-                      <p className="nannies-reviewer-name pb-[4px]">
-                        {review.author}
-                      </p>
-                      <div className="flex flex-row">
-                        <Icon
-                          id="star"
-                          className="w-4 h-4 text-yellow-400 mr-1"
-                        />
-                        <p className="nannies-reviewer-rating">
-                          {review.rating}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-subtitle">{review.comment}</p>
-                </div>
-              ))}
+          {isExpanded && (
+            <div className="mt-4">
+              <div className="space-y-4">
+                {nanny.reviews.map((review, index) => (
+                  <ReviewCard key={index} review={review} />
+                ))}
+              </div>
+              <button
+                className="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+                onClick={handleOpenModal}
+              >
+                Make an appointment
+              </button>
             </div>
-            <button className="nannies-app-btn" onClick={handleOpenModal}>
-              Make an appointment
-            </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       <Modal
         isOpen={isModalOpen}
-        classNameWrapper="rounded-[30px]"
         onClose={handleCloseModal}
+        classNameWrapper="rounded-[20px]"
       >
         <AppointmentForm
           nannyName={nanny.name}

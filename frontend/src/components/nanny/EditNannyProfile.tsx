@@ -74,7 +74,7 @@ const EditNannyProfile: React.FC<EditNannyProfileProps> = ({ onClose }) => {
 
     const payload = {
       data: { ...formData },
-      file: avatarFile || undefined, // Фікс TypeScript-помилки
+      file: avatarFile || undefined,
     };
 
     try {
