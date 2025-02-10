@@ -33,10 +33,10 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
   };
 
   return (
-    <div className="relative pt-[64px] max-w-[400px] w-full">
-      <p className="text-subtitle pb-[8px]">Filters</p>
+    <div className="relative w-full max-w-md  pt-8">
+      <p className="text-subtitle pb-2 text-center md:text-left">Filters</p>
       <div
-        className="max-w-[226px] max-h-[48px] bg-[#1e3a3a] text-white rounded-[14px] px-[18px] py-[14px] cursor-pointer flex justify-between items-center"
+        className="w-full bg-[#1e3a3a] text-white rounded-[14px] px-4 py-3 cursor-pointer flex justify-between items-center"
         onClick={() => setIsOpen(!isOpen)}
       >
         {selectedLabel}
@@ -44,11 +44,11 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange }) => {
       </div>
 
       {isOpen && (
-        <ul className="absolute top-[150px] max-w-[226px] max-h-[244px] bg-white shadow-md rounded-[14px] space-y-2 z-10 px-[18px] py-[14px]">
+        <ul className="absolute left-0 right-0 mt-2 bg-white shadow-md rounded-[14px] space-y-2 z-10 p-4">
           {options.map((option, index) => (
             <li
               key={index}
-              className="text-[rgba(17,16,28,0.5)] hover:text-black cursor-pointer"
+              className="text-gray-500 hover:text-black cursor-pointer text-center md:text-left"
               onClick={() => handleOptionClick(option)}
             >
               {option.label}

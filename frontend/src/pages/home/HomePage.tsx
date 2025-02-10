@@ -5,14 +5,19 @@ import RightSide from "../../components/welcome/RightSide";
 
 const HomePage: React.FC = () => {
   return (
-    <div className="flex flex-col items-center justify-start relative mx-auto w-full ">
-      <div className="absolute z-10 top-8 w-[1440px] border-b border-[rgba(251,251,251,0.4)]">
+    <div className="flex flex-col items-center justify-start relative mx-auto w-full min-h-screen">
+      <div className="fixed top-0 z-10 w-full bg-opacity-90 border-b border-[rgba(251,251,251,0.4)]">
         <Header />
       </div>
-      <Wrapper>
-        <LeftSide />
-        <RightSide />
-      </Wrapper>
+
+      <div className="pt-16 w-full px-4 sm:px-6 lg:px-8">
+        <Wrapper>
+          <div className="flex flex-col md:flex-row w-full">
+            <LeftSide />
+            <RightSide />
+          </div>
+        </Wrapper>
+      </div>
     </div>
   );
 };

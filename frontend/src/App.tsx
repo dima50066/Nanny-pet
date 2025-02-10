@@ -15,7 +15,7 @@ const RequestResetPage = React.lazy(
   () => import("./pages/password/RequestResetPage")
 );
 const ResetPasswordPage = React.lazy(
-  () => import("./pages/password/RequestResetPage")
+  () => import("./pages/password/ResetPasswordPage")
 );
 const ProfilePage = React.lazy(() => import("./pages/profile/Profile"));
 const PrivateRoute = React.lazy(

@@ -1,32 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createNannyProfile } from "../../redux/nanny/operations";
-import { selectLoading } from "../../redux/nanny/selectors";
+import { updateNannyProfile } from "../../redux/nanny/operations";
+import {
+  selectLoading,
+  selectMyNannyProfile,
+} from "../../redux/nanny/selectors";
 import { AppDispatch } from "../../redux/store";
 import { toast } from "react-toastify";
 
-interface CreateNannyProfileProps {
+interface EditNannyProfileProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-interface FormData {
-  name: string;
-  birthday: string;
-  experience: string;
-  education: string;
-  kids_age: string;
-  price_per_hour: number;
-  location: string;
-  about: string;
-  characters: string;
-}
-
-const CreateNannyProfile: React.FC<CreateNannyProfileProps> = ({ onClose }) => {
+const EditNannyProfile: React.FC<EditNannyProfileProps> = ({ onClose }) => {
   const dispatch = useDispatch<AppDispatch>();
   const loading = useSelector(selectLoading);
+  const myNannyProfile = useSelector(selectMyNannyProfile);
 
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState({
     name: "",
     birthday: "",
     experience: "",
@@ -40,11 +32,30 @@ const CreateNannyProfile: React.FC<CreateNannyProfileProps> = ({ onClose }) => {
 
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
+  useEffect(() => {
+    if (myNannyProfile) {
+      setFormData({
+        name: myNannyProfile.name,
+        birthday: Array.isArray(myNannyProfile.birthday)
+          ? myNannyProfile.birthday[0]
+          : myNannyProfile.birthday,
+        experience: myNannyProfile.experience,
+        education: myNannyProfile.education,
+        kids_age: myNannyProfile.kids_age,
+        price_per_hour: myNannyProfile.price_per_hour,
+        location: myNannyProfile.location,
+        about: myNannyProfile.about,
+        characters: Array.isArray(myNannyProfile.characters)
+          ? myNannyProfile.characters.join(", ")
+          : myNannyProfile.characters,
+      });
+    }
+  }, [myNannyProfile]);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-
     setFormData((prev) => ({
       ...prev,
       [name]: name === "price_per_hour" ? Number(value) : value,
@@ -58,27 +69,27 @@ const CreateNannyProfile: React.FC<CreateNannyProfileProps> = ({ onClose }) => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!avatarFile) {
-      toast.error("Please upload an avatar file.");
-      return;
-    }
 
     const payload = {
       data: { ...formData },
-      file: avatarFile,
+      file: avatarFile || undefined,
     };
 
-    dispatch(createNannyProfile(payload));
-    onClose();
+    try {
+      await dispatch(updateNannyProfile(payload)).unwrap();
+      toast.success("Profile updated successfully!");
+      onClose();
+    } catch {
+      toast.error("Failed to update profile.");
+    }
   };
 
   return (
-    <div className="w-full  max-w-[700px] max-h-[95vh] bg-white  rounded-2xl mx-auto p-6 sm:p-8 flex flex-col">
+    <div className="w-full max-w-[700px] max-h-[95vh] bg-white rounded-2xl mx-auto p-6 sm:p-8 flex flex-col">
       <h2 className="text-title pb-3 sm:pb-4 text-center">
-        Create Nanny Profile
+        Edit Nanny Profile
       </h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -92,7 +103,6 @@ const CreateNannyProfile: React.FC<CreateNannyProfileProps> = ({ onClose }) => {
               onChange={handleChange}
               className="w-full input input-text"
               required
-              placeholder="Alexandra"
             />
           </div>
 
@@ -127,7 +137,6 @@ const CreateNannyProfile: React.FC<CreateNannyProfileProps> = ({ onClose }) => {
               onChange={handleChange}
               className="w-full input input-text"
               required
-              placeholder="1 year of experience"
             />
           </div>
 
@@ -140,7 +149,6 @@ const CreateNannyProfile: React.FC<CreateNannyProfileProps> = ({ onClose }) => {
               onChange={handleChange}
               className="w-full input input-text"
               required
-              placeholder="Bachelor of Psychology"
             />
           </div>
 
@@ -153,7 +161,6 @@ const CreateNannyProfile: React.FC<CreateNannyProfileProps> = ({ onClose }) => {
               onChange={handleChange}
               className="w-full input input-text"
               required
-              placeholder="2-4 years old"
             />
           </div>
 
@@ -166,7 +173,6 @@ const CreateNannyProfile: React.FC<CreateNannyProfileProps> = ({ onClose }) => {
               onChange={handleChange}
               className="w-full input input-text"
               required
-              placeholder="Enter the price per hour"
               min={5}
             />
           </div>
@@ -180,7 +186,6 @@ const CreateNannyProfile: React.FC<CreateNannyProfileProps> = ({ onClose }) => {
               onChange={handleChange}
               className="w-full input input-text"
               required
-              placeholder="Kyiv, Ukraine"
             />
           </div>
         </div>
@@ -193,7 +198,6 @@ const CreateNannyProfile: React.FC<CreateNannyProfileProps> = ({ onClose }) => {
             onChange={handleChange}
             className="w-full input input-text resize-none h-24"
             required
-            placeholder="Tell us about yourself"
           />
         </div>
 
@@ -206,21 +210,19 @@ const CreateNannyProfile: React.FC<CreateNannyProfileProps> = ({ onClose }) => {
             onChange={handleChange}
             className="w-full input input-text"
             required
-            placeholder="Compassionate, Patient, Responsible"
           />
         </div>
-        <div className="text-center">
-          <button
-            type="submit"
-            className="w-full sm:w-64 bg-main text-white py-2 rounded-lg hover:bg-green-700 transition"
-            disabled={loading}
-          >
-            {loading ? "Creating..." : "Create Profile"}
-          </button>
-        </div>
+
+        <button
+          type="submit"
+          className="w-full sm:w-64 bg-main text-white py-2 rounded-lg hover:bg-green-700 transition"
+          disabled={loading}
+        >
+          {loading ? "Updating..." : "Update Profile"}
+        </button>
       </form>
     </div>
   );
 };
 
-export default CreateNannyProfile;
+export default EditNannyProfile;

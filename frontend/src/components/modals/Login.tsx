@@ -53,37 +53,41 @@ const LogInModal = () => {
   };
 
   return (
-    <div className="p-[64px] w-[565px] h-[489px]">
-      <h1 className="text-title pb-[20px]">Log In</h1>
-      <p className="text-subtitle pb-[40px]">
+    <div className="p-6 sm:p-8 md:p-10 w-full max-w-sm sm:max-w-md md:max-w-lg bg-white shadow-lg mx-auto">
+      <h1 className="text-title pb-3 sm:pb-4 text-center sm:text-left">
+        Log In
+      </h1>
+      <p className="text-subtitle pb-5 sm:pb-6 text-center sm:text-left">
         Welcome back! Please enter your credentials to access your account and
         continue your babysitter search.
       </p>
 
       {authError && <p className="text-red-500 text-sm pb-4">{authError}</p>}
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="relative mb-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 ">
+        <div className="relative">
           <input
             type="email"
             placeholder="Email"
             {...register("email")}
-            className="input input-text focus:outline-none focus:ring-2 focus:ring-main"
+            className="w-full input input-text focus:outline-none focus:ring-2 focus:ring-main"
           />
           {errors.email && (
-            <p className="text-red-500 text-sm">{errors.email.message}</p>
+            <p className="text-red-500 text-sm pt-1">{errors.email.message}</p>
           )}
         </div>
 
-        <div className="relative mb-6">
+        <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
             placeholder="Password"
             {...register("password")}
-            className="input input-text focus:outline-none focus:ring-2 focus:ring-main"
+            className="w-full input input-text focus:outline-none focus:ring-2 focus:ring-main"
           />
           {errors.password && (
-            <p className="text-red-500 text-sm">{errors.password.message}</p>
+            <p className="text-red-500 text-sm pt-1">
+              {errors.password.message}
+            </p>
           )}
           <button
             type="button"
@@ -97,13 +101,15 @@ const LogInModal = () => {
           </button>
         </div>
 
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="w-[438px] h-[52px] bg-main text-white text-[16px] font-medium rounded-[30px] hover:bg-green-700 transition"
-        >
-          {isLoading ? "Loading..." : "Log In"}
-        </button>
+        <div className="text-center">
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full sm:w-96 bg-main text-white text-[16px] font-medium rounded-[30px] py-3 hover:bg-green-700 transition"
+          >
+            {isLoading ? "Loading..." : "Log In"}
+          </button>
+        </div>
       </form>
     </div>
   );

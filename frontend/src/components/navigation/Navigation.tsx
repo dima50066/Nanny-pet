@@ -1,41 +1,26 @@
 import { NavLink } from "react-router-dom";
-import { selectIsLoggedIn } from "../../redux/auth/selectors";
 import { useSelector } from "react-redux";
+import { selectIsLoggedIn } from "../../redux/auth/selectors";
 
 const Navigation = () => {
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
   return (
-    <nav className="flex justify-center">
-      <ul className="flex flex-row gap-[40px] mx-auto">
+    <nav>
+      <ul className="flex flex-col md:flex-row gap-4 md:gap-8 text-center">
         <li>
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              `header-text relative ${isActive ? "active-link" : ""}`
-            }
-          >
+          <NavLink to="/" className="header-text relative">
             Home
           </NavLink>
         </li>
         <li>
-          <NavLink
-            to="/nannies"
-            className={({ isActive }) =>
-              `header-text relative ${isActive ? "active-link" : ""}`
-            }
-          >
+          <NavLink to="/nannies" className="header-text relative">
             Nannies
           </NavLink>
         </li>
         {isLoggedIn && (
           <li>
-            <NavLink
-              to="/favorites"
-              className={({ isActive }) =>
-                `header-text relative ${isActive ? "active-link" : ""}`
-              }
-            >
+            <NavLink to="/favorites" className="header-text relative">
               Favorites
             </NavLink>
           </li>

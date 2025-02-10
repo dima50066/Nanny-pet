@@ -161,8 +161,9 @@ const nanniesSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateNannyProfile.fulfilled, (state) => {
+      .addCase(updateNannyProfile.fulfilled, (state, action) => {
         state.loading = false;
+        state.myNannyProfile = action.payload;
       })
       .addCase(updateNannyProfile.rejected, (state, action) => {
         state.loading = false;

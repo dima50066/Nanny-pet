@@ -17,7 +17,7 @@ const NanniesList: React.FC<NanniesListProps> = ({ nannies, isLoading }) => {
     if (isLoading) {
       setShowLoader(true);
     } else {
-      timer = setTimeout(() => setShowLoader(false), 2000);
+      timer = setTimeout(() => setShowLoader(false), 1000);
     }
 
     return () => {
@@ -28,13 +28,13 @@ const NanniesList: React.FC<NanniesListProps> = ({ nannies, isLoading }) => {
   }, [isLoading]);
 
   return (
-    <div className="pt-[32px]">
+    <div className="pt-8">
       {showLoader ? (
         <div className="flex justify-center items-center">
           <Loader />
         </div>
       ) : (
-        <div className="grid xl:grid-cols-1 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-[32px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {nannies.map((nanny) => (
             <Nanny key={nanny._id} nanny={nanny} />
           ))}

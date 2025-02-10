@@ -8,11 +8,11 @@ interface PageLayoutProps {
 
 const PageLayout: React.FC<PageLayoutProps> = ({ children }) => {
   return (
-    <div className="mx-auto w-full ">
-      <div className="bg-main ">
+    <div className="w-full bg-[#F3F3F3]">
+      <div className="bg-main w-full">
         <Header />
       </div>
-      <div className="pl-[100px] pr-[100px] bg-[#F3F3F3] w-full">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <ToastContainer />
         {children}
       </div>

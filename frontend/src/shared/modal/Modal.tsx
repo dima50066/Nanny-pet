@@ -54,7 +54,7 @@ const Modal: React.FC<ModalProps> = ({
       onClick={handleBackdropClick}
     >
       <div
-        className={`relative bg-white overflow-y-auto overflow-x-hidden ${classNameWrapper}`}
+        className={`relative bg-white overflow-y-auto overflow-x-hidden  ${classNameWrapper}`}
       >
         <div className={`relative ${className}`}>
           <button
